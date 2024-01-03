@@ -1,5 +1,11 @@
+import Index from "./router";
+
 function App() {
-  return <div>This is app</div>;
+  return (
+    <div>
+      <Index />
+    </div>
+  );
 }
 
 export default App;
