@@ -5,6 +5,7 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { Input, Typography } from "antd";
 
 const validationSchema = Yup.object({
   password: Yup.string()
@@ -24,7 +25,7 @@ const initialValues = {
 };
 
 export default function ResetPassword() {
-  const [passwordSet, setIsPasswordSet] = useState(false);
+  const [isPasswordSet, setIsPasswordSet] = useState(false);
   let navigate = useNavigate();
 
   const onSubmit = async (values) => {
@@ -49,44 +50,98 @@ export default function ResetPassword() {
         <div className="mt-14 ml-14">
           <img src={logo} alt="logo.png" className="h-6 w-32" />
           <div className="mt-6">
-            <p className="text-white text-3xl mb-3">Reset Password</p>
-            {!passwordSet ? (
+            <p
+              style={{
+                fontSize: "32px",
+                fontStyle: "normal",
+                fontWeight: 500,
+                lineHeight: "100%",
+                color: "#F6F6F6",
+              }}
+            >
+              Reset Password
+            </p>
+            {!isPasswordSet ? (
               <Formik
                 initialValues={initialValues}
                 validationSchema={validationSchema}
                 onSubmit={onSubmit}
               >
                 <Form>
-                  <label className="mb-1 text-gray-300">New password</label>
-                  <div className="mb-1 ">
-                    <Field type="password" id="password" name="password" />
+                  <div className="mt-6 mb-4">
+                    <Typography.Title
+                      level={5}
+                      style={{
+                        color: "#949494",
+                        fontSize: "12px",
+                        fontStyle: "normal",
+                        fontWeight: 400,
+                        lineHeight: "100%",
+                      }}
+                    >
+                      New password
+                    </Typography.Title>
+                    <Field
+                      id="password"
+                      name="password"
+                      render={({ field }) => (
+                        <Input.Password
+                          {...field}
+                          placeholder="Enter password"
+                          style={{ width: 320, borderRadius: 5 }}
+                        />
+                      )}
+                    />
                     <ErrorMessage
-                      className="text-gray-300 text-sm"
+                      className="text-gray-300 text-xs"
                       name="password"
                       component="div"
                     />
                   </div>
-
-                  <label className="mb-1 text-gray-300">
-                    Re-enter password
-                  </label>
-                  <div className="mb-1 ">
+                  <div className="mb-1">
+                    <Typography.Title
+                      level={5}
+                      style={{
+                        color: "#949494",
+                        fontSize: "12px",
+                        fontStyle: "normal",
+                        fontWeight: 400,
+                        lineHeight: "100%",
+                      }}
+                    >
+                      Re-enter password
+                    </Typography.Title>
                     <Field
-                      type="password"
                       id="confirm_password"
                       name="confirm_password"
+                      render={({ field }) => (
+                        <Input.Password
+                          {...field}
+                          placeholder="Re - enter password"
+                          style={{ width: 320, borderRadius: 5 }}
+                        />
+                      )}
                     />
                     <ErrorMessage
-                      className="text-gray-300 text-sm"
+                      className="text-gray-300 text-xs"
                       name="confirm_password"
                       component="div"
                     />
                   </div>
 
-                  <div>
+                  <div className="mt-10">
                     <button
+                      style={{
+                        width: "320px",
+                        color: "black",
+                        padding: "12px 8px",
+                        background:
+                          "var(--Brand-Secondary_Light, color(display-p3 0.9529 0.8941 0.7098))",
+                        borderRadius: "40px",
+                        border:
+                          "2px solid var(--Brand-Secondary_Light, #FAE2A8)",
+                      }}
                       type="submit"
-                      class="text-white w-52 mt-6 bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                     >
                       Submit
                     </button>
@@ -94,24 +149,32 @@ export default function ResetPassword() {
                 </Form>
               </Formik>
             ) : (
-              <>
-                <p className="text-white mt-4 text-xs">
-                  Your password reset has been
-                </p>
-                <p className="text-white text-xs">
+              <div className="mt-8">
+                <p
+                  style={{
+                    fontSize: "16px",
+                    fontStyle: "normal",
+                    fontWeight: 400,
+                    lineHeight: "150%",
+                    color: "#F6F6F6",
+                  }}
+                >
+                  Your password reset has been <br />
                   completed successfully. Kindly
+                  <p className="text-white mb-3">
+                    sign in to access your account.
+                  </p>
                 </p>
-                <p className="text-white mb-1 text-xs">
-                  sign in to access your account.
-                </p>
-              </>
+              </div>
             )}
 
-            <p className="text-white text-xs mt-6">
-              <Link to={"/signin"} className="text-white">
-                Go to sign in
-              </Link>
-            </p>
+            {isPasswordSet && (
+              <p className="text-white text-xs mt-6">
+                <Link to={"/signin"} className="text-white">
+                  {"< Go to sign in"}
+                </Link>
+              </p>
+            )}
           </div>
         </div>
       </div>
