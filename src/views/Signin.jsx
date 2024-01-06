@@ -28,7 +28,7 @@ export default function Signin() {
     await axios
       .post("http://62.72.0.179:5000/auth/login", values)
       .then((res) => {
-        if (res.data.success) {
+        if (res.data.token) {
           localStorage.setItem("_token", res.data.token);
           navigate("/dashboard");
         } else {
