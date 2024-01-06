@@ -9,7 +9,7 @@ import {
   UserOutlined,
   VideoCameraOutlined,
 } from "@ant-design/icons";
-import { Layout, Menu, theme } from "antd";
+import { Flex, Input, Layout, Menu, theme } from "antd";
 import logoIcon from "../assets/icons/logoIcon.svg";
 import { Link } from "react-router-dom";
 import { RxDashboard } from "react-icons/rx";
@@ -17,17 +17,15 @@ import { FiUser } from "react-icons/fi";
 import { LuFlagTriangleRight } from "react-icons/lu";
 import { IoMdNotificationsOutline, IoIosLogOut } from "react-icons/io";
 import { MdOutlineEmail } from "react-icons/md";
+import Search from "antd/es/input/Search";
 
 const { Header, Content, Footer, Sider } = Layout;
 const items = [
   RxDashboard,
-  VideoCameraOutlined,
-  UploadOutlined,
-  BarChartOutlined,
-  CloudOutlined,
-  AppstoreOutlined,
-  TeamOutlined,
-  ShopOutlined,
+  FiUser,
+  LuFlagTriangleRight,
+  IoMdNotificationsOutline,
+  IoIosLogOut,
 ].map((icon, index) => ({
   key: String(index + 1),
   icon: React.createElement(icon),
@@ -96,23 +94,126 @@ const SideBar = () => {
           items={items}
         />
       </Sider>
-      <Layout
-        style={{
-          marginLeft: 200,
-        }}
-      >
+
+      <Layout style={{ marginLeft: "72px" }}>
         <Header
           style={{
-            padding: 0,
-            background: colorBgContainer,
+            height: "64px",
+            background: "#000",
           }}
-        />
+        >
+          <Flex justify="space-between" style={{ marginTop: 16 }}>
+            <div
+              style={{
+                color: "white",
+                fontSize: "20px",
+                fontStyle: "normal",
+                fontWeight: 500,
+                lineHeight: "100%",
+              }}
+            >
+              Dashboard
+            </div>
+            <Flex>
+              <Search
+                placeholder="Search here..."
+                allowClear
+                // onSearch={onSearch}
+                style={{
+                  width: 200,
+                  background: "#3D3B35",
+                }}
+              />
+              <FiUser
+                style={{
+                  fontSize: "24px",
+                  marginLeft: 24,
+                  marginTop: 2,
+                  color: "white",
+                }}
+              />
+              <p
+                style={{
+                  marginTop: 5,
+                  marginLeft: 4,
+                  fontSize: "14px",
+                  fontStyle: "normal",
+                  fontWeight: 400,
+                  lineHeight: "100%",
+                  color: "var(--Text-T1, #F6F6F6)",
+                }}
+              >
+                Ritesh Macwan
+              </p>
+              <IoMdNotificationsOutline
+                style={{
+                  fontSize: "24px",
+                  marginLeft: 20,
+                  marginTop: 2,
+                  color: "white",
+                }}
+              />
+            </Flex>
+          </Flex>
+        </Header>
         <Content
           style={{
-            margin: "24px 16px 0",
+            background: "#000",
             overflow: "initial",
           }}
         >
+          <Flex
+            gap={49}
+            style={{ marginTop: 16, marginBottom: 16, marginLeft: 32 }}
+          >
+            <div
+              style={{
+                width: 260,
+                height: 88,
+                background: "#3D3B35",
+                alignItems: "center",
+                borderRadius: 8,
+              }}
+            >
+              <Flex gap={16}>
+                <FiUser style={{ fontSize: 24 }} />
+                <div>
+                  <p>400</p>
+                  <p>Users</p>
+                </div>
+              </Flex>
+            </div>
+            <div
+              style={{
+                width: 260,
+                height: 88,
+                background: "#3D3B35",
+                borderRadius: 8,
+              }}
+            >
+              2
+            </div>
+            <div
+              style={{
+                width: 260,
+                height: 88,
+                background: "#3D3B35",
+                borderRadius: 8,
+              }}
+            >
+              3
+            </div>
+            <div
+              style={{
+                width: 260,
+                height: 88,
+                background: "#3D3B35",
+                borderRadius: 8,
+              }}
+            >
+              4
+            </div>
+          </Flex>
           <div
             style={{
               padding: 24,
