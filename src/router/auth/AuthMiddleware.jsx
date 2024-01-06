@@ -3,7 +3,11 @@ import { Navigate, Outlet } from "react-router-dom";
 
 export default function AuthMiddleware() {
   return localStorage.getItem("_token") ? (
-    <Outlet />
+    window.location.pathname === "/" ? (
+      <Navigate to={"/dashboard"} />
+    ) : (
+      <Outlet />
+    )
   ) : (
     <Navigate to={"/signin"} />
   );

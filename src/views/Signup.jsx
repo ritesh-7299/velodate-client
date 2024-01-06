@@ -4,8 +4,9 @@ import * as Yup from "yup";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import { Input, Typography } from "antd";
+import { Input, Typography, notification } from "antd";
 import { useEffect } from "react";
+import { notificationConfig } from "../config/NotificationConfig";
 
 const validationSchema = Yup.object({
   fullname: Yup.string().required("Full name is required"),
@@ -35,19 +36,16 @@ export default function Signup() {
 
   const onSubmit = async (values) => {
     console.log("Form data submitted:", values);
-    await axios
-      .post("http://62.72.0.179:5000/auth/signup", values)
-      .then((res) => {
-        if (res.data.success) {
-          localStorage.setItem("_token", res.data.object.token);
-          navigate("/dashboard");
-        } else {
-          alert("Something went wrong");
-        }
-      })
-      .catch(() => {
-        alert("something went wrong");
+    const res = await axios.post("http://62.72.0.179:5000/auth/signup", values);
+    if (res.data.success) {
+      localStorage.setItem("_token", res.data.object.token);
+      navigate("/dashboard");
+    } else {
+      notification.error({
+        ...notificationConfig,
+        message: "Something went wrong",
       });
+    }
   };
 
   return (
