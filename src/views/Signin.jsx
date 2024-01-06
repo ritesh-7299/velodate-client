@@ -39,8 +39,11 @@ export default function Signin() {
         localStorage.setItem("_token", res.data.token);
         navigate("/dashboard");
       } else {
-        notification.error({ message: "Invalid credentials" });
-        alert("Invalid credentials");
+        notification.error({
+          ...notificationConfig,
+          message: "Invalid credentials",
+          description: "Please check email/contact number and password",
+        });
       }
     } catch (error) {
       error.response?.data?.message === "Unauthorized"

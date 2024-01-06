@@ -10,6 +10,7 @@ const NotFound = React.lazy(() => import("../views/NotFound"));
 const ForgotPassword = React.lazy(() => import("../views/ForgotPassword"));
 const ResetPassword = React.lazy(() => import("../views/ResetPassword"));
 const Dashboard = React.lazy(() => import("../views/dashboard/Dashboard"));
+const UserDetail = React.lazy(() => import("../views/user/UserDetail"));
 
 export default function Index() {
   const isLoggedIn = localStorage.getItem("_token") ? true : false;
@@ -17,17 +18,23 @@ export default function Index() {
     <Suspense fallback={<Loader />}>
       <Router>
         <Routes>
-          <Route Component={AuthMiddleware}>
-            <Route path="/" Component={Home} />
-            <Route path="/dashboard" Component={Dashboard} />
-          </Route>
+          {/* {"open routes"} */}
+          <Route path="/forgot-password" Component={ForgotPassword} />
+          <Route path="/reset-password" Component={ResetPassword} />
+          <Route path="*" Component={NotFound} />
+
+          {/* restricted routes */}
           <Route Component={RestrictedMiddleware}>
             <Route path="/signin" Component={Signin} />
             <Route path="/signup" Component={Signup} />
           </Route>
-          <Route path="/forgot-password" Component={ForgotPassword} />
-          <Route path="/reset-password" Component={ResetPassword} />
-          <Route path="*" Component={NotFound} />
+
+          {/* authenticated routes */}
+          <Route Component={AuthMiddleware}>
+            <Route path="/" Component={Home} />
+            <Route path="/dashboard" Component={Dashboard} />
+            <Route path="/user/:userId" Component={UserDetail} />
+          </Route>
         </Routes>
       </Router>
     </Suspense>
