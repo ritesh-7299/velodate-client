@@ -4,6 +4,8 @@ import * as Yup from "yup";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import { Input, Typography } from "antd";
+import { useEffect } from "react";
 
 const validationSchema = Yup.object({
   fullname: Yup.string().required("Full name is required"),
@@ -54,75 +56,212 @@ export default function Signup() {
         <div className="mt-14 ml-14">
           <img src={logo} alt="logo.png" className="h-6 w-32" />
           <div className="mt-6">
-            <p className="text-white text-3xl mb-1">Signup</p>
-            <p className="text-white mb-1">Lorem ipsum dolor sit amet</p>
-            <p className="text-white mb-3">
-              consectetur. Nullamcorper feugiat.
+            <p
+              style={{
+                fontSize: "32px",
+                fontStyle: "normal",
+                fontWeight: 500,
+                lineHeight: "100%",
+                color: "#F6F6F6",
+              }}
+            >
+              Signup
             </p>
+            <div className="mt-2">
+              <p
+                style={{
+                  fontSize: "14px",
+                  fontStyle: "normal",
+                  fontWeight: 400,
+                  lineHeight: "150%",
+                  color: "#F6F6F6",
+                }}
+              >
+                Lorem ipsum dolor sit amet <br />
+                <p className="text-white mb-3">
+                  consectetur. Nullamcorper feugiat.
+                </p>
+              </p>
+            </div>
             <Formik
               initialValues={initialValues}
               validationSchema={validationSchema}
               onSubmit={onSubmit}
             >
               <Form>
-                <label className="mb-1 text-gray-300">Full name</label>
-                <div className="mb-1 ">
-                  <Field type="text" id="fullname" name="fullname" />
+                <div className="mt-6 mb-4">
+                  <Typography.Title
+                    level={5}
+                    style={{
+                      color: "#949494",
+                      fontSize: "12px",
+                      fontStyle: "normal",
+                      fontWeight: 400,
+                      lineHeight: "100%",
+                    }}
+                  >
+                    Full name
+                  </Typography.Title>
+                  <Field
+                    id="fullname"
+                    name="fullname"
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        id="fullname"
+                        size="middle"
+                        style={{ width: 320, borderRadius: 5 }}
+                        placeholder="Enter your full name"
+                      />
+                    )}
+                  />
                   <ErrorMessage
-                    className="text-gray-300 text-sm"
+                    className="text-gray-300 text-xs"
                     name="fullname"
                     component="div"
                   />
                 </div>
 
-                <label className="mb-1 text-gray-300">Email</label>
-                <div className="mb-1 ">
-                  <Field type="text" id="email" name="email" />
+                <div className="mb-1">
+                  <Typography.Title
+                    level={5}
+                    style={{
+                      color: "#949494",
+                      fontSize: "12px",
+                      fontStyle: "normal",
+                      fontWeight: 400,
+                      lineHeight: "100%",
+                    }}
+                  >
+                    Email
+                  </Typography.Title>
+                  <Field
+                    id="email"
+                    name="email"
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        size="middle"
+                        style={{ width: 320, borderRadius: 5 }}
+                        placeholder="Enter your email"
+                      />
+                    )}
+                  />
                   <ErrorMessage
-                    className="text-gray-300 text-sm"
+                    className="text-gray-300 text-xs"
                     name="email"
                     component="div"
                   />
                 </div>
 
-                <label className="mb-1 text-gray-300">Contact number</label>
-                <div className="mb-1 ">
-                  <Field type="text" id="contact" name="contact" />
+                <div className="mb-1">
+                  <Typography.Title
+                    level={5}
+                    style={{
+                      color: "#949494",
+                      fontSize: "12px",
+                      fontStyle: "normal",
+                      fontWeight: 400,
+                      lineHeight: "100%",
+                    }}
+                  >
+                    Contact number
+                  </Typography.Title>
+                  <Field
+                    id="contact"
+                    name="contact"
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        size="middle"
+                        style={{ width: 320, borderRadius: 5 }}
+                        placeholder="Enter your contact number"
+                      />
+                    )}
+                  />
                   <ErrorMessage
-                    className="text-gray-300 text-sm"
+                    className="text-gray-300 text-xs"
                     name="contact"
                     component="div"
                   />
                 </div>
 
-                <label className="mb-1 text-gray-300">Password</label>
                 <div className="mb-1 ">
-                  <Field type="password" id="password" name="password" />
+                  <Typography.Title
+                    level={5}
+                    style={{
+                      color: "#949494",
+                      fontSize: "12px",
+                      fontStyle: "normal",
+                      fontWeight: 400,
+                      lineHeight: "100%",
+                    }}
+                  >
+                    Password
+                  </Typography.Title>
+                  <Field
+                    id="password"
+                    name="password"
+                    render={({ field }) => (
+                      <Input.Password
+                        {...field}
+                        placeholder="Create password"
+                        style={{ width: 320, borderRadius: 5 }}
+                      />
+                    )}
+                  />
+
                   <ErrorMessage
-                    className="text-gray-300 text-sm"
+                    className="text-gray-300 text-xs"
                     name="password"
                     component="div"
                   />
                 </div>
 
-                <label className="mb-1 text-gray-300">Confirm password</label>
                 <div className="mb-1 ">
+                  <Typography.Title
+                    level={5}
+                    style={{
+                      color: "#949494",
+                      fontSize: "12px",
+                      fontStyle: "normal",
+                      fontWeight: 400,
+                      lineHeight: "100%",
+                    }}
+                  >
+                    Confirm password
+                  </Typography.Title>
                   <Field
-                    type="password"
                     id="confirm_password"
                     name="confirm_password"
+                    render={({ field }) => (
+                      <Input.Password
+                        {...field}
+                        placeholder="Confirm password"
+                        style={{ width: 320, borderRadius: 5 }}
+                      />
+                    )}
                   />
+
                   <ErrorMessage
-                    className="text-gray-300 text-sm"
+                    className="text-gray-300 text-xs"
                     name="confirm_password"
                     component="div"
                   />
                 </div>
 
-                <div>
+                <div className="mt-10">
                   <button
+                    style={{
+                      width: "320px",
+                      color: "black",
+                      padding: "12px 8px",
+                      background:
+                        "var(--Brand-Secondary_Light, color(display-p3 0.9529 0.8941 0.7098))",
+                      borderRadius: "40px",
+                      border: "2px solid var(--Brand-Secondary_Light, #FAE2A8)",
+                    }}
                     type="submit"
-                    class="text-white w-52 mt-6 bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                   >
                     Sign Up
                   </button>
@@ -130,9 +269,21 @@ export default function Signup() {
               </Form>
             </Formik>
 
-            <p className="text-white text-xs mt-6">
+            <p
+              style={{
+                fontSize: "14px",
+                fontStyle: "normal",
+                fontWeight: 500,
+                lineHeight: "100%",
+              }}
+              className="text-white text-xs mt-6"
+            >
               Already have an account?{" "}
-              <Link to={"/signin"} className="text-yellow-400">
+              <Link
+                to={"/signin"}
+                style={{ color: "#D8A409" }}
+                className="text-yellow-400"
+              >
                 Sign In
               </Link>
             </p>

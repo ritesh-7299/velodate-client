@@ -5,6 +5,7 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { Input, Typography } from "antd";
 
 const validationSchema = Yup.object({
   email: Yup.string().required("Email is required"),
@@ -40,11 +41,34 @@ export default function ForgotPassword() {
         <div className="mt-14 ml-14">
           <img src={logo} alt="logo.png" className="h-6 w-32" />
           <div className="mt-6">
-            <p className="text-white text-3xl mb-1">Forgot Password</p>
-            <p className="text-white mb-1">
-              Lost your password? Please enter your
+            <p
+              style={{
+                fontSize: "32px",
+                fontStyle: "normal",
+                fontWeight: 500,
+                lineHeight: "100%",
+                color: "#F6F6F6",
+              }}
+            >
+              Forgot Password
             </p>
-            <p className="text-white mb-3">registered email.</p>
+            {!isEmailSent && (
+              <div className="mt-2">
+                <p
+                  style={{
+                    fontSize: "14px",
+                    fontStyle: "normal",
+                    fontWeight: 400,
+                    lineHeight: "150%",
+                    color: "#F6F6F6",
+                  }}
+                >
+                  Lost your password? Please enter your <br />
+                  <p className="text-white mb-3">registered email.</p>
+                </p>
+              </div>
+            )}
+
             {!isEmailSent ? (
               <Formik
                 initialValues={initialValues}
@@ -52,19 +76,52 @@ export default function ForgotPassword() {
                 onSubmit={onSubmit}
               >
                 <Form>
-                  <label className="mb-1 text-gray-300">Email</label>
-                  <div className="mb-1 ">
-                    <Field type="text" id="email" name="email" />
+                  <div className="mt-6 mb-4">
+                    <Typography.Title
+                      level={5}
+                      style={{
+                        color: "#949494",
+                        fontSize: "12px",
+                        fontStyle: "normal",
+                        fontWeight: 400,
+                        lineHeight: "100%",
+                      }}
+                    >
+                      Email
+                    </Typography.Title>
+                    <Field
+                      name="email"
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          id="email"
+                          size="middle"
+                          style={{ width: 320, borderRadius: 5 }}
+                          placeholder="Enter your email"
+                        />
+                      )}
+                    />
+
                     <ErrorMessage
-                      className="text-gray-300 text-sm"
+                      className="text-gray-300 text-xs"
                       name="email"
                       component="div"
                     />
                   </div>
-                  <div>
+
+                  <div className="mt-10">
                     <button
+                      style={{
+                        width: "320px",
+                        color: "black",
+                        padding: "12px 8px",
+                        background:
+                          "var(--Brand-Secondary_Light, color(display-p3 0.9529 0.8941 0.7098))",
+                        borderRadius: "40px",
+                        border:
+                          "2px solid var(--Brand-Secondary_Light, #FAE2A8)",
+                      }}
                       type="submit"
-                      class="text-white w-52 mt-6 bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                     >
                       Submit
                     </button>
@@ -72,20 +129,26 @@ export default function ForgotPassword() {
                 </Form>
               </Formik>
             ) : (
-              <>
-                <p className="text-white mt-4 text-xs">
-                  Password reset email has been
-                </p>
-                <p className="text-white text-xs">
+              <div className="mt-8">
+                <p
+                  style={{
+                    fontSize: "16px",
+                    fontStyle: "normal",
+                    fontWeight: 400,
+                    lineHeight: "150%",
+                    color: "#F6F6F6",
+                  }}
+                >
+                  Password reset email has been <br />
                   sent on your registered email
+                  <p className="text-white mb-3">address.</p>
                 </p>
-                <p className="text-white mb-1 text-xs">address.</p>
-              </>
+              </div>
             )}
 
             <p className="text-white text-xs mt-6">
               <Link to={"/signin"} className="text-white">
-                Go back
+                {"< Go back"}
               </Link>
             </p>
           </div>
