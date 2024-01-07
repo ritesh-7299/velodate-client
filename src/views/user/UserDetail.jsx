@@ -1,15 +1,99 @@
-import { Button, Image, notification } from "antd";
+import {
+  Button,
+  Col,
+  Divider,
+  Flex,
+  Image,
+  Modal,
+  Row,
+  Switch,
+  Upload,
+  notification,
+} from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Loader from "../../components/Loader";
 import { notificationConfig } from "../../config/NotificationConfig";
 import chevronUp from "../../assets/chevronUp.svg";
+import AdminLayout from "../../layouts/AdminLayout";
+import { Content, Footer } from "antd/es/layout/layout";
+import { FaPlus } from "react-icons/fa6";
+
+const getBase64 = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+  });
 
 export default function UserDetail() {
   const { userId } = useParams();
   const [data, setData] = useState(null);
   const [loader, setLoader] = useState(false);
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState("");
+  const [previewTitle, setPreviewTitle] = useState("");
+  const [fileList, setFileList] = useState([
+    {
+      uid: "-1",
+      name: "image.png",
+      status: "done",
+      url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
+    },
+    {
+      uid: "-2",
+      name: "image.png",
+      status: "done",
+      url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
+    },
+  ]);
+  const handleCancel = () => setPreviewOpen(false);
+  const handlePreview = async (file) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
+    }
+    setPreviewImage(file.url || file.preview);
+    setPreviewOpen(true);
+    setPreviewTitle(
+      file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
+    );
+  };
+  const handleChange = ({ fileList: newFileList }) => setFileList(newFileList);
+  const uploadButton = (
+    <button
+      style={{
+        border: 0,
+        background: "none",
+      }}
+      type="button"
+    >
+      <FaPlus className="text-white text-4xl mt-8 ml-1" />
+      <div
+        style={{
+          marginTop: 8,
+        }}
+      >
+        Upload
+      </div>
+    </button>
+  );
+
+  const styles = {
+    headingStyle: {
+      fontSize: "14px",
+      fontStyle: "normal",
+      fontWeight: 400,
+      lineHeight: "100%",
+    },
+    answerStyle: {
+      fontSize: "16px",
+      fontStyle: "normal",
+      fontWeight: 400,
+      lineHeight: "100%",
+    },
+  };
 
   const fetchData = async () => {
     try {
@@ -40,26 +124,321 @@ export default function UserDetail() {
   }, [userId]);
 
   return (
-    <div className="bg-blue-400 ml-8">
+    <AdminLayout header={"User details"}>
       {data ? (
         <>
-          <div className="mt-4 mb-2">
-            <div className="flex">
-              <img src={chevronUp} />
-              <img
-                src="http://62.72.0.179:5000/uploads/1704377924976-20210309105412.png"
-                className="ml-2 rounded-full w-14 h-14"
-              />
-              <p className="ml-4"></p>
+          <Content
+            style={{
+              background: "#000",
+              overflow: "initial",
+              color: "white",
+            }}
+          >
+            <Flex
+              style={{
+                marginTop: 16,
+                marginBottom: 16,
+                marginRight: 74,
+                marginLeft: 32,
+              }}
+              justify="space-between"
+            >
+              <Flex>
+                <Flex>
+                  <Link to={"/users"}>
+                    <img src={chevronUp} alt="icon" />
+                  </Link>
+                  <img
+                    className="rounded-full w-14 h-14"
+                    src={"http://62.72.0.179:5000/" + data.profile_img}
+                    alt="profile"
+                  />
+                </Flex>
+                <Flex vertical className="ml-4">
+                  <p
+                    style={{
+                      fontSize: "32px",
+                      fontStyle: "normal",
+                      fontWeight: 500,
+                      lineHeight: "100%",
+                      color: "yellow",
+                    }}
+                  >
+                    {data?.fullname ? data.fullname : "-"}
+                  </p>
+                  <p
+                    className="mt-1"
+                    style={{
+                      fontSize: "16px",
+                      fontStyle: "normal",
+                      fontWeight: 400,
+                      lineHeight: "100%",
+                    }}
+                  >
+                    {data?.address ? data.address : "-"}
+                  </p>
+                </Flex>
+              </Flex>
+              <Flex>
+                <Button
+                  style={{
+                    borderRadius: 20,
+                    color: "white",
+                    marginRight: 16,
+                    marginTop: 8,
+                  }}
+                >
+                  Delete
+                </Button>
+                <Button
+                  style={{
+                    borderRadius: 20,
+                    color: "white",
+                    marginRight: 16,
+                    marginTop: 8,
+                  }}
+                >
+                  Save changes
+                </Button>
+              </Flex>
+            </Flex>
+            <div
+              style={{
+                marginLeft: 32,
+                marginTop: 12,
+              }}
+            >
+              <Row>
+                <Col style={{ ...styles.headingStyle }} span={24}>
+                  Basic Details
+                </Col>
+                <Col
+                  style={{ ...styles.headingStyle }}
+                  span={4}
+                  className="mt-4"
+                >
+                  Gender
+                </Col>
+                <Col
+                  style={{ ...styles.answerStyle }}
+                  span={20}
+                  className="mt-4"
+                >
+                  {data?.gender ? data.gender : "-"}
+                </Col>
+                <Col
+                  style={{ ...styles.headingStyle }}
+                  span={4}
+                  className="mt-4"
+                >
+                  Phone
+                </Col>
+                <Col
+                  style={{ ...styles.answerStyle }}
+                  span={20}
+                  className="mt-4"
+                >
+                  {data?.contact ? data.contact : "-"}
+                </Col>
+                <Col
+                  style={{ ...styles.headingStyle }}
+                  span={4}
+                  className="mt-4"
+                >
+                  Email
+                </Col>
+                <Col
+                  style={{ ...styles.answerStyle }}
+                  span={20}
+                  className="mt-4"
+                >
+                  {data?.email ? data.email : "-"}
+                </Col>
+                <Col
+                  style={{ ...styles.headingStyle }}
+                  span={4}
+                  className="mt-4"
+                >
+                  Like to date
+                </Col>
+                <Col
+                  style={{ ...styles.answerStyle }}
+                  span={20}
+                  className="mt-4"
+                >
+                  {data?.liketodate ? data.liketodate : "-"}
+                </Col>
+                <Col
+                  style={{ ...styles.headingStyle }}
+                  span={4}
+                  className="mt-4"
+                >
+                  Interests
+                </Col>
+                <Col
+                  style={{ ...styles.answerStyle }}
+                  span={20}
+                  className="mt-4"
+                >
+                  {data?.thingstodo ? data.thingstodo : "-"}
+                </Col>
+              </Row>
+              <div className="mt-8">
+                Images
+                <Upload
+                  className="mt-4 mb-4"
+                  action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
+                  listType="picture-card"
+                  fileList={fileList}
+                  onPreview={handlePreview}
+                  onChange={handleChange}
+                >
+                  {fileList.length >= 8 ? null : uploadButton}
+                </Upload>
+                <Modal
+                  open={previewOpen}
+                  title={previewTitle}
+                  footer={null}
+                  onCancel={handleCancel}
+                >
+                  <img
+                    alt="example"
+                    style={{
+                      width: "100%",
+                    }}
+                    src={previewImage}
+                  />
+                </Modal>
+              </div>
+
+              <div className="mt-4 mb-4 mr-16">
+                <Divider
+                  style={{
+                    backgroundColor: "gray",
+                  }}
+                />
+              </div>
+
+              <Row>
+                <Col style={{ ...styles.headingStyle }} span={24}>
+                  Phone Notifications
+                </Col>
+                <Col
+                  style={{ ...styles.answerStyle }}
+                  span={4}
+                  className="mt-4"
+                >
+                  New Match
+                </Col>
+                <Col
+                  style={{ ...styles.answerStyle }}
+                  span={20}
+                  className="mt-4"
+                >
+                  <Switch defaultChecked />
+                </Col>
+                <Col
+                  style={{ ...styles.answerStyle }}
+                  span={4}
+                  className="mt-4"
+                >
+                  New Messages
+                </Col>
+                <Col
+                  style={{ ...styles.answerStyle }}
+                  span={20}
+                  className="mt-4"
+                >
+                  <Switch defaultChecked />
+                </Col>
+                <Col
+                  style={{ ...styles.answerStyle }}
+                  span={4}
+                  className="mt-4"
+                >
+                  Announcements
+                </Col>
+                <Col
+                  style={{ ...styles.answerStyle }}
+                  span={20}
+                  className="mt-4"
+                >
+                  <Switch defaultChecked />
+                </Col>
+                <Col className="text-gray-400 text-xs" span={4}>
+                  What's new in ValoDate
+                </Col>
+              </Row>
+
+              <div className="mt-4 mb-4 mr-16">
+                <Divider
+                  style={{
+                    backgroundColor: "gray",
+                  }}
+                />
+              </div>
+
+              <Row>
+                <Col style={{ ...styles.headingStyle }} span={24}>
+                  Email Notifications
+                </Col>
+                <Col
+                  style={{ ...styles.answerStyle }}
+                  span={4}
+                  className="mt-4"
+                >
+                  New Match
+                </Col>
+                <Col
+                  style={{ ...styles.answerStyle }}
+                  span={20}
+                  className="mt-4"
+                >
+                  <Switch defaultChecked />
+                </Col>
+                <Col
+                  style={{ ...styles.answerStyle }}
+                  span={4}
+                  className="mt-4"
+                >
+                  New Messages
+                </Col>
+                <Col
+                  style={{ ...styles.answerStyle }}
+                  span={20}
+                  className="mt-4"
+                >
+                  <Switch defaultChecked />
+                </Col>
+                <Col
+                  style={{ ...styles.answerStyle }}
+                  span={4}
+                  className="mt-4"
+                >
+                  Announcements
+                </Col>
+                <Col
+                  style={{ ...styles.answerStyle }}
+                  span={20}
+                  className="mt-4"
+                >
+                  <Switch defaultChecked />
+                </Col>
+                <Col className="text-gray-400 text-xs" span={4}>
+                  What's new in ValoDate
+                </Col>
+              </Row>
             </div>
-          </div>
-          <div className="mt-3 mb-4">Basic Details</div>
+          </Content>
+          <Footer
+            style={{
+              background: "#000",
+            }}
+          ></Footer>
         </>
       ) : (
-        console.log("noo")
+        <Loader />
       )}
-      {loader && <Loader />}
-      UserDetail - {userId}
-    </div>
+    </AdminLayout>
   );
 }

@@ -10,6 +10,7 @@ const NotFound = React.lazy(() => import("../views/NotFound"));
 const ForgotPassword = React.lazy(() => import("../views/ForgotPassword"));
 const ResetPassword = React.lazy(() => import("../views/ResetPassword"));
 const Dashboard = React.lazy(() => import("../views/dashboard/Dashboard"));
+const Users = React.lazy(() => import("../views/user/Index"));
 const UserDetail = React.lazy(() => import("../views/user/UserDetail"));
 
 export default function Index() {
@@ -33,7 +34,8 @@ export default function Index() {
           <Route Component={AuthMiddleware}>
             <Route path="/" Component={Home} />
             <Route path="/dashboard" Component={Dashboard} />
-            <Route path="/user/:userId" Component={UserDetail} />
+            <Route path="/users" Component={Users} />
+            <Route path="/users/:userId" Component={UserDetail} />
           </Route>
         </Routes>
       </Router>
