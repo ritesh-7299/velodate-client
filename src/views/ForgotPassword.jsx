@@ -1,5 +1,5 @@
 import signupImage from "../assets/signupImage.png";
-import logo from "../assets/logo.png";
+import logo from "../assets/logo.svg";
 import * as Yup from "yup";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import axios from "axios";
@@ -39,7 +39,7 @@ export default function ForgotPassword() {
     <div className="grid grid-cols-2 h-screen">
       <div className="bg-black">
         <div className="mt-14 ml-14">
-          <img src={logo} alt="logo.png" className="h-6 w-32" />
+          <img src={logo} alt="logo.svg" className="h-6 w-32" />
           <div className="mt-6">
             <p
               style={{
