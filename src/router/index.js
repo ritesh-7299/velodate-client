@@ -12,6 +12,7 @@ const ResetPassword = React.lazy(() => import("../views/ResetPassword"));
 const Dashboard = React.lazy(() => import("../views/dashboard/Dashboard"));
 const Users = React.lazy(() => import("../views/user/Index"));
 const UserDetail = React.lazy(() => import("../views/user/UserDetail"));
+const Reports = React.lazy(() => import("../views/report/Index"));
 
 export default function Index() {
   const isLoggedIn = localStorage.getItem("_token") ? true : false;
@@ -36,6 +37,7 @@ export default function Index() {
             <Route path="/dashboard" Component={Dashboard} />
             <Route path="/users" Component={Users} />
             <Route path="/users/:userId" Component={UserDetail} />
+            <Route path="/reports" Component={Reports} />
           </Route>
         </Routes>
       </Router>
