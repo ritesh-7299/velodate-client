@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import AdminLayout from "../../layouts/AdminLayout";
-import { Button, Flex, Pagination, Table, notification, theme } from "antd";
+import { Button, Flex, Pagination, Table, notification } from "antd";
 import { Content, Footer } from "antd/es/layout/layout";
 import { FaSortAmountDown } from "react-icons/fa";
 import { CiFilter } from "react-icons/ci";

@@ -3,7 +3,6 @@ import {
   Col,
   Divider,
   Flex,
-  Image,
   Modal,
   Row,
   Switch,
@@ -31,7 +30,6 @@ const getBase64 = (file) =>
 export default function UserDetail() {
   const { userId } = useParams();
   const [data, setData] = useState(null);
-  const [loader, setLoader] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
@@ -97,7 +95,6 @@ export default function UserDetail() {
 
   const fetchData = async () => {
     try {
-      setLoader(true);
       const res = await axios.get(
         `http://62.72.0.179:5000/api/users/${userId}`
       );
@@ -116,12 +113,11 @@ export default function UserDetail() {
         message: "Something went wrong",
       });
     } finally {
-      setLoader(false);
     }
   };
   useEffect(() => {
     fetchData();
-  }, [userId]);
+  }, []);
 
   return (
     <AdminLayout header={"User details"}>

@@ -8,6 +8,8 @@ import { LuFlagTriangleRight } from "react-icons/lu";
 import { IoMdNotificationsOutline, IoIosLogOut } from "react-icons/io";
 import Search from "antd/es/input/Search";
 import Loader from "../components/Loader";
+import { useDispatch, useSelector } from "react-redux";
+import { removeUser } from "../redux/userSlice";
 
 const { Header, Sider } = Layout;
 const items = [
@@ -24,6 +26,8 @@ const items = [
 
 const AdminLayout = ({ children, header }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const username = useSelector((state) => state.user.name);
   const [loader, setLoader] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -44,6 +48,7 @@ const AdminLayout = ({ children, header }) => {
     setLoader(true);
     if (localStorage.getItem("_token")) {
       localStorage.removeItem("_token");
+      dispatch(removeUser());
       setLoader(false);
       navigate("/signin");
     }
@@ -58,10 +63,7 @@ const AdminLayout = ({ children, header }) => {
         onOk={handleOk}
         onCancel={handleCancel}
         okButtonProps={{
-          background: "blue",
-        }}
-        cancelButtonProps={{
-          disabled: true,
+          background: "black",
         }}
       >
         <p>Are you sure want to logout?</p>
@@ -173,7 +175,7 @@ const AdminLayout = ({ children, header }) => {
                   color: "var(--Text-T1, #F6F6F6)",
                 }}
               >
-                Ritesh Macwan
+                {username ? username : "username"}
               </p>
               <IoMdNotificationsOutline
                 style={{

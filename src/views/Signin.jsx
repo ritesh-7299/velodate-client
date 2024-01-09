@@ -8,6 +8,8 @@ import { Checkbox, Input, Typography, notification } from "antd";
 import Loader from "../components/Loader";
 import { useState } from "react";
 import { notificationConfig } from "../config/NotificationConfig.js";
+import { useDispatch } from "react-redux";
+import { setUser } from "../redux/userSlice.js";
 
 const validationSchema = Yup.object({
   username: Yup.string().required("Email or Contact number is required"),
@@ -25,6 +27,7 @@ const initialValues = {
 };
 
 export default function Signin() {
+  const dispatch = useDispatch();
   const [loader, setLoader] = useState(false);
   let navigate = useNavigate();
 
@@ -36,6 +39,13 @@ export default function Signin() {
         values
       );
       if (res.data.token) {
+        console.log(
+          "🚀 ~ file: Signin.jsx:42 ~ onSubmit ~ res.data:",
+          res.data
+        );
+        dispatch(
+          setUser({ name: res.data?.data?.fullname, id: res.data?.data?.id })
+        );
         localStorage.setItem("_token", res.data.token);
         navigate("/dashboard");
       } else {

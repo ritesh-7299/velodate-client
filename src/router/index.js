@@ -15,7 +15,6 @@ const UserDetail = React.lazy(() => import("../views/user/UserDetail"));
 const Reports = React.lazy(() => import("../views/report/Index"));
 
 export default function Index() {
-  const isLoggedIn = localStorage.getItem("_token") ? true : false;
   return (
     <Suspense fallback={<Loader />}>
       <Router>

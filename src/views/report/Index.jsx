@@ -168,7 +168,7 @@ export default function Index() {
             pagination={false}
             columns={columns}
             dataSource={data}
-            rowKey="id"
+            rowKey="report_id"
           />
         </div>
       </Content>

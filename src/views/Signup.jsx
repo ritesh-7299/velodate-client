@@ -5,8 +5,9 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { Input, Typography, notification } from "antd";
-import { useEffect } from "react";
 import { notificationConfig } from "../config/NotificationConfig";
+import { useDispatch } from "react-redux";
+import { setUser } from "../redux/userSlice";
 
 const validationSchema = Yup.object({
   fullname: Yup.string().required("Full name is required"),
@@ -33,14 +34,29 @@ const initialValues = {
 
 export default function Signup() {
   let navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const onSubmit = async (values) => {
-    console.log("Form data submitted:", values);
-    const res = await axios.post("http://62.72.0.179:5000/auth/signup", values);
-    if (res.data.success) {
-      localStorage.setItem("_token", res.data.object.token);
-      navigate("/dashboard");
-    } else {
+    try {
+      const res = await axios.post(
+        "http://62.72.0.179:5000/auth/signup",
+        values
+      );
+      if (res.data.success) {
+        localStorage.setItem("_token", res.data.object.token);
+        dispatch(
+          setUser({
+            name: res.data.object?.user?.fullname,
+            id: res.data.object?.user?.id,
+          })
+        );
+        navigate("/dashboard");
+      } else {
+        notification.error({
+          ...notificationConfig,
+          message: "Something went wrong",
+        });
+      }
+    } catch (error) {
       notification.error({
         ...notificationConfig,
         message: "Something went wrong",
