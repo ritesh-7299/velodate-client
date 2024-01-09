@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import AdminLayout from "../../layouts/AdminLayout";
-import { Button, Flex, Pagination, Table, notification, theme } from "antd";
+import { Button, Flex, Pagination, Table, notification } from "antd";
 import { Content, Footer } from "antd/es/layout/layout";
 import { FaSortAmountDown } from "react-icons/fa";
 import { CiFilter } from "react-icons/ci";
@@ -8,12 +8,11 @@ import { notificationConfig } from "../../config/NotificationConfig.js";
 
 import axios from "axios";
 import Loader from "../../components/Loader.jsx";
-import { Link } from "react-router-dom";
 
 const columns = [
   {
     title: "User",
-    dataIndex: "users",
+    dataIndex: "sender",
     render: (text) => (text ? text : "-"),
   },
   {
@@ -75,7 +74,7 @@ export default function Index() {
     try {
       setLoader(true);
       const res = await axios.get(
-        `http://62.72.0.179:5000/api/users?page=${page}&pageSize=10`
+        `http://62.72.0.179:5000/api/getAllreports?page=${page}&pageSize=10`
       );
       if (res.data.success) {
         console.log("Reseponse", res.data);
