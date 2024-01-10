@@ -175,7 +175,7 @@ const AdminLayout = ({ children, header }) => {
                   color: "var(--Text-T1, #F6F6F6)",
                 }}
               >
-                {username ? username : "username"}
+                <Link to={"/profile"}>{username ? username : "username"}</Link>
               </p>
               <IoMdNotificationsOutline
                 style={{
