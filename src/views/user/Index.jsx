@@ -82,7 +82,6 @@ export default function Index() {
         `http://62.72.0.179:5000/api/users?page=${page}&pageSize=10`
       );
       if (res.data.success) {
-        console.log("Reseponse", res.data);
         setData(res.data.data);
         setPagination(res.data.pagination);
       } else {
@@ -92,7 +91,6 @@ export default function Index() {
         });
       }
     } catch (error) {
-      console.log(error);
       notification.error({
         ...notificationConfig,
         message: "Something went wrong",

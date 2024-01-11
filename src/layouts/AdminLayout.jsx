@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Flex, Layout, Menu, Modal } from "antd";
 import logoIcon from "../assets/icons/logoIcon.svg";
 import { Link, useNavigate } from "react-router-dom";
@@ -9,7 +9,8 @@ import { IoMdNotificationsOutline, IoIosLogOut } from "react-icons/io";
 import Search from "antd/es/input/Search";
 import Loader from "../components/Loader";
 import { useDispatch, useSelector } from "react-redux";
-import { removeUser } from "../redux/userSlice";
+import { removeUser, setUser } from "../redux/userSlice";
+import axios from "axios";
 
 const { Header, Sider } = Layout;
 const items = [
@@ -53,6 +54,21 @@ const AdminLayout = ({ children, header }) => {
       navigate("/signin");
     }
   };
+  const setUserData = async () => {
+    const res = await axios.get("http://62.72.0.179:5000/auth/getUser");
+    if (res.data?.success) {
+      dispatch(
+        setUser({ name: res.data?.user?.fullname, id: res.data?.user?.id })
+      );
+    } else {
+      localStorage.removeItem("_token");
+    }
+  };
+  useEffect(() => {
+    if (!username) {
+      setUserData();
+    }
+  }, []);
 
   return (
     <Layout hasSider>
@@ -91,7 +107,6 @@ const AdminLayout = ({ children, header }) => {
             fontSize: "30px",
           }}
           onClick={({ item, key, keyPath, selectedKeys, domEvent }) => {
-            console.log("item item", item);
             switch (key) {
               case "1":
                 navigate("/dashboard");
@@ -175,7 +190,7 @@ const AdminLayout = ({ children, header }) => {
                   color: "var(--Text-T1, #F6F6F6)",
                 }}
               >
-                <Link to={"/profile"}>{username ? username : "username"}</Link>
+                <Link to={"/profile"}>{username ? username : ""}</Link>
               </p>
               <IoMdNotificationsOutline
                 style={{

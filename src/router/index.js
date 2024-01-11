@@ -14,6 +14,7 @@ const Users = React.lazy(() => import("../views/user/Index"));
 const UserDetail = React.lazy(() => import("../views/user/UserDetail"));
 const Reports = React.lazy(() => import("../views/report/Index"));
 const Profile = React.lazy(() => import("../views/profile/Index"));
+const SetPassword = React.lazy(() => import("../views/profile/SetPassword"));
 
 export default function Index() {
   return (
@@ -39,6 +40,7 @@ export default function Index() {
             <Route path="/users/:userId" Component={UserDetail} />
             <Route path="/reports" Component={Reports} />
             <Route path="/profile" Component={Profile} />
+            <Route path="/set-password" Component={SetPassword} />
           </Route>
         </Routes>
       </Router>

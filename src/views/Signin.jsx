@@ -35,14 +35,10 @@ export default function Signin() {
     setLoader(true);
     try {
       const res = await axios.post(
-        "http://62.72.0.179:5000/auth/login",
+        "http://62.72.0.179:5000/auth/loginForAdmin",
         values
       );
       if (res.data.token) {
-        console.log(
-          "🚀 ~ file: Signin.jsx:42 ~ onSubmit ~ res.data:",
-          res.data
-        );
         dispatch(
           setUser({ name: res.data?.data?.fullname, id: res.data?.data?.id })
         );

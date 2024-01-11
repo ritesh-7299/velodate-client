@@ -10,9 +10,17 @@ import { useDispatch } from "react-redux";
 import { setUser } from "../redux/userSlice";
 
 const validationSchema = Yup.object({
-  fullname: Yup.string().required("Full name is required"),
-  email: Yup.string().required("Email is required"),
-  contact: Yup.string().required("Contact number is required"),
+  fullname: Yup.string()
+    .required("Full name is required")
+    .max(20, "Full name must be less then 20 characters"),
+  email: Yup.string().email().required("Email is required"),
+  contact: Yup.string()
+    .required("Contact number is required")
+    .max(15, "Contact number must be less than 10 digits")
+    .matches(
+      /^[0-9+]+$/,
+      "Contact number must not contain alphabetic characters"
+    ),
   password: Yup.string()
     .required("Password is required")
     .matches(

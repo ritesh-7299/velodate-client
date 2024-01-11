@@ -23,11 +23,17 @@ import * as Yup from "yup";
 import dayjs from "dayjs";
 
 const validationSchema = Yup.object({
-  fullname: Yup.string().required("Full name is required"),
-  email: Yup.string().required("Email is required"),
-  contact: Yup.string().required("Contact number is required"),
-  //   birthDate: Yup.string().required("Contact number is required"),
-  //   gender: Yup.string().required("Contact number is required"),
+  fullname: Yup.string()
+    .required("Full name is required")
+    .max(20, "Full name must be less then 20 characters"),
+  email: Yup.string().email().required("Email is required"),
+  contact: Yup.string()
+    .required("Contact number is required")
+    .max(15, "Contact number must be less than 10 digits")
+    .matches(
+      /^[0-9+]+$/,
+      "Contact number must not contain alphabetic characters"
+    ),
 });
 
 export default function Index() {
@@ -35,6 +41,8 @@ export default function Index() {
   const userId = user.id ? user.id : 11;
   const userName = user.name ? user.name : "Ritesh Macwan";
   const [data, setData] = useState(null);
+  const [dob, setDOB] = useState(null);
+  const [gender, setGender] = useState(null);
   const [loader, setLoader] = useState(false);
   const styles = {
     headingStyle: {
@@ -53,7 +61,11 @@ export default function Index() {
 
   const dateFormat = "YYYY/MM/DD";
 
-  const initialValues = {
+  const handleChange = (date, dateString) => {
+    setDOB(dateString);
+  };
+
+  let initialValues = {
     fullname: data?.fullname ? data.fullname : "",
     email: data?.email ? data.email : "",
     contact: data?.contact ? data.contact : "",
@@ -62,7 +74,14 @@ export default function Index() {
   };
 
   const onSubmit = async (values) => {
-    alert("hii");
+    if (dob) {
+      values["dob"] = dob;
+    }
+    if (gender) {
+      values["gender"] = gender;
+    }
+    alert("profile update api integration is remaining");
+    return;
     setLoader(true);
     try {
       const res = await axios.post(
@@ -70,11 +89,6 @@ export default function Index() {
         values
       );
       if (res.data.token) {
-        console.log(
-          "🚀 ~ file: Signin.jsx:42 ~ onSubmit ~ res.data:",
-          res.data
-        );
-
         localStorage.setItem("_token", res.data.token);
         // navigate("/dashboard");
       } else {
@@ -99,11 +113,9 @@ export default function Index() {
 
   const fetchData = async () => {
     try {
-      const res = await axios.get(
-        `http://62.72.0.179:5000/api/users/${userId}`
-      );
+      const res = await axios.get(`http://62.72.0.179:5000/auth/getUser`);
       if (res.data.success) {
-        setData(res.data.object);
+        setData(res.data.user);
       } else {
         notification.error({
           ...notificationConfig,
@@ -321,6 +333,10 @@ export default function Index() {
                         render={({ field }) => (
                           <DatePicker
                             {...field}
+                            disabledDate={(currentDate) =>
+                              currentDate && currentDate > dayjs()
+                            }
+                            onChange={handleChange}
                             style={{
                               width: 320,
                               borderRadius: 5,
@@ -356,6 +372,8 @@ export default function Index() {
                               width: 320,
                               borderRadius: 5,
                             }}
+                            value={gender}
+                            onChange={(e) => setGender(e)}
                             options={[
                               { value: "male", label: "Male" },
                               { value: "female", label: "Female" },
@@ -378,7 +396,6 @@ export default function Index() {
                       }}
                     />
                   </div>
-
                   <Row>
                     <Col style={{ ...styles.headingStyle }} span={24}>
                       <Flex justify="space-between">
@@ -388,7 +405,7 @@ export default function Index() {
                         </div>
                       </Flex>
                     </Col>
-                    <Col
+                    {/* <Col
                       style={{ ...styles.answerStyle }}
                       span={4}
                       className="mt-8"
@@ -401,10 +418,11 @@ export default function Index() {
                       className="mt-6"
                     >
                       <Input.Password
+                        autoComplete={false}
                         placeholder="input password"
                         style={{ width: 320, borderRadius: 5 }}
                       ></Input.Password>
-                    </Col>
+                    </Col> */}
                   </Row>
                 </div>
               </Form>

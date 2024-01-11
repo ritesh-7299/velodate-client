@@ -99,7 +99,6 @@ export default function UserDetail() {
         `http://62.72.0.179:5000/api/users/${userId}`
       );
       if (res.data.success) {
-        console.log("🚀 ~ file: UserDetail.jsx:12 ~ useEffect ~ res:", res);
         setData(res.data.object);
       } else {
         notification.error({
