@@ -11,6 +11,7 @@ import Loader from "../components/Loader";
 import { useDispatch, useSelector } from "react-redux";
 import { removeUser, setUser } from "../redux/userSlice";
 import axios from "axios";
+import { MdOutlineEmail } from "react-icons/md";
 
 const { Header, Sider } = Layout;
 const items = [
@@ -18,6 +19,7 @@ const items = [
   FiUser,
   LuFlagTriangleRight,
   IoMdNotificationsOutline,
+  MdOutlineEmail,
   IoIosLogOut,
 ].map((icon, index) => ({
   key: String(index + 1),
@@ -125,6 +127,10 @@ const AdminLayout = ({ children, header }) => {
                 break;
 
               case "5":
+                navigate("/emails");
+                break;
+
+              case "6":
                 showLogoutModal();
                 break;
 

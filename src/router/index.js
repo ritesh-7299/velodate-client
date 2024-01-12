@@ -15,6 +15,16 @@ const UserDetail = React.lazy(() => import("../views/user/UserDetail"));
 const Reports = React.lazy(() => import("../views/report/Index"));
 const Profile = React.lazy(() => import("../views/profile/Index"));
 const SetPassword = React.lazy(() => import("../views/profile/SetPassword"));
+const Notifications = React.lazy(() => import("../views/notification/Index"));
+const NotificationDetail = React.lazy(() =>
+  import("../views/notification/NotificationDetail")
+);
+const NewNotification = React.lazy(() =>
+  import("../views/notification/NewNotification")
+);
+const Emails = React.lazy(() => import("../views/email/Index"));
+const EmailDetail = React.lazy(() => import("../views/email/EmailDetail"));
+const NewEmail = React.lazy(() => import("../views/email/NewEmail"));
 
 export default function Index() {
   return (
@@ -41,6 +51,15 @@ export default function Index() {
             <Route path="/reports" Component={Reports} />
             <Route path="/profile" Component={Profile} />
             <Route path="/set-password" Component={SetPassword} />
+            <Route path="/notifications" Component={Notifications} />
+            <Route path="/add-notification" Component={NewNotification} />
+            <Route
+              path="/notifications/:notificationId"
+              Component={NotificationDetail}
+            />
+            <Route path="/emails" Component={Emails} />
+            <Route path="/add-email" Component={NewEmail} />
+            <Route path="/emails/:emailId" Component={EmailDetail} />
           </Route>
         </Routes>
       </Router>
