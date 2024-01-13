@@ -5,7 +5,9 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { Input, Typography } from "antd";
+import { Input, Typography, notification } from "antd";
+import Loader from "../components/Loader";
+import { notificationConfig } from "../config/NotificationConfig";
 
 const validationSchema = Yup.object({
   email: Yup.string().required("Email is required"),
@@ -17,26 +19,39 @@ const initialValues = {
 
 export default function ForgotPassword() {
   const [isEmailSent, setIsEmailSent] = useState(false);
+  const [loader, setLoader] = useState(false);
   let navigate = useNavigate();
 
   const onSubmit = async (values) => {
-    setIsEmailSent(true);
-    // await axios
-    //   .post("http://62.72.0.179:5000/auth/forgot-password", values)
-    //   .then((res) => {
-    //     if (res.data.success) {
-    //       navigate("/dashboard");
-    //     } else {
-    //       alert("Something went wrong");
-    //     }
-    //   })
-    //   .catch(() => {
-    //     alert("something went wrong");
-    //   });
+    try {
+      setLoader(true);
+      const res = await axios.post(
+        "http://62.72.0.179:5000/auth/forgot-password",
+        values
+      );
+      if (res.data.success) {
+        setIsEmailSent(true);
+      } else {
+        notification.error({
+          ...notificationConfig,
+          message: "Something went wrong",
+          description: "Email has not been sent",
+        });
+      }
+    } catch (error) {
+      notification.error({
+        ...notificationConfig,
+        message: "Something went wrong",
+        description: "Email has not been sent",
+      });
+    } finally {
+      setLoader(false);
+    }
   };
 
   return (
     <div className="grid grid-cols-2 h-screen">
+      {loader && <Loader />}
       <div className="bg-black">
         <div className="mt-14 ml-14">
           <img src={logo} alt="logo.svg" className="h-6 w-32" />

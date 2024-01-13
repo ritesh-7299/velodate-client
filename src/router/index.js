@@ -33,7 +33,7 @@ export default function Index() {
         <Routes>
           {/* {"open routes"} */}
           <Route path="/forgot-password" Component={ForgotPassword} />
-          <Route path="/reset-password" Component={ResetPassword} />
+          <Route path="/reset-password/:resetToken" Component={ResetPassword} />
           <Route path="*" Component={NotFound} />
 
           {/* restricted routes */}
