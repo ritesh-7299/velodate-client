@@ -9,6 +9,8 @@ import { notificationConfig } from "../../config/NotificationConfig.js";
 import axios from "axios";
 import Loader from "../../components/Loader.jsx";
 import { Link } from "react-router-dom";
+import dayjs from "dayjs";
+const dateFormat = "YYYY/MM/DD";
 
 const columns = [
   {
@@ -25,7 +27,7 @@ const columns = [
   {
     title: "DOB",
     dataIndex: "birthdate",
-    render: (text) => (text ? text : "-"),
+    render: (text) => (text ? dayjs(text, dateFormat) : "-"),
   },
   {
     title: "Phone",

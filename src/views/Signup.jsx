@@ -65,10 +65,17 @@ export default function Signup() {
         });
       }
     } catch (error) {
-      notification.error({
-        ...notificationConfig,
-        message: "Something went wrong",
-      });
+      if (!error.response.data.success) {
+        notification.error({
+          ...notificationConfig,
+          message: error.response.data.message,
+        });
+      } else {
+        notification.error({
+          ...notificationConfig,
+          message: "Something went wrong",
+        });
+      }
     }
   };
 

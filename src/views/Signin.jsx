@@ -58,7 +58,10 @@ export default function Signin() {
             message: "Invalid credentials",
             description: "Please check email/contact number and password",
           })
-        : alert("something went wrong");
+        : notification.error({
+            ...notificationConfig,
+            message: "Something went wrong",
+          });
     } finally {
       setLoader(false);
     }
