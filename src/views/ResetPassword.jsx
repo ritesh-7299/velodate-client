@@ -1,11 +1,13 @@
 import signupImage from "../assets/signupImage.png";
-import logo from "../assets/logo.png";
+import logo from "../assets/logo.svg";
 import * as Yup from "yup";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
-import { Input, Typography } from "antd";
+import { Input, Typography, notification } from "antd";
+import Loader from "../components/Loader";
+import { notificationConfig } from "../config/NotificationConfig";
 
 const validationSchema = Yup.object({
   password: Yup.string()
@@ -26,29 +28,44 @@ const initialValues = {
 
 export default function ResetPassword() {
   const [isPasswordSet, setIsPasswordSet] = useState(false);
+  const [loader, setLoader] = useState(false);
   let navigate = useNavigate();
+  let { resetToken } = useParams();
 
   const onSubmit = async (values) => {
-    setIsPasswordSet(true);
-    // await axios
-    //   .post("http://62.72.0.179:5000/auth/forgot-password", values)
-    //   .then((res) => {
-    //     if (res.data.success) {
-    //       navigate("/dashboard");
-    //     } else {
-    //       alert("Something went wrong");
-    //     }
-    //   })
-    //   .catch(() => {
-    //     alert("something went wrong");
-    //   });
+    try {
+      setLoader(true);
+      values["resettoken"] = resetToken;
+
+      const res = await axios.post(
+        "http://62.72.0.179:5000/auth/reset-password",
+        values
+      );
+      if (res.data.success) {
+        isPasswordSet(true);
+      } else {
+        notification.error({
+          ...notificationConfig,
+          message: "Something went wrong",
+          description: "Your password has not been reset",
+        });
+      }
+    } catch (error) {
+      notification.error({
+        ...notificationConfig,
+        message: "Something went wrong",
+        description: "Your password has not been reset",
+      });
+    } finally {
+      setLoader(false);
+    }
   };
 
   return (
     <div className="grid grid-cols-2 h-screen">
       <div className="bg-black">
         <div className="mt-14 ml-14">
-          <img src={logo} alt="logo.png" className="h-6 w-32" />
+          <img src={logo} alt="logo.svg" className="h-6 w-32" />
           <div className="mt-6">
             <p
               style={{
@@ -181,6 +198,7 @@ export default function ResetPassword() {
       <div>
         <img src={signupImage} alt="signup.png" />
       </div>
+      {loader && <Loader />}
     </div>
   );
 }

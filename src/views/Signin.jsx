@@ -1,5 +1,5 @@
 import signupImage from "../assets/signupImage.png";
-import logo from "../assets/logo.png";
+import logo from "../assets/logo.svg";
 import * as Yup from "yup";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import axios from "axios";
@@ -8,6 +8,8 @@ import { Checkbox, Input, Typography, notification } from "antd";
 import Loader from "../components/Loader";
 import { useState } from "react";
 import { notificationConfig } from "../config/NotificationConfig.js";
+import { useDispatch } from "react-redux";
+import { setUser } from "../redux/userSlice.js";
 
 const validationSchema = Yup.object({
   username: Yup.string().required("Email or Contact number is required"),
@@ -25,6 +27,7 @@ const initialValues = {
 };
 
 export default function Signin() {
+  const dispatch = useDispatch();
   const [loader, setLoader] = useState(false);
   let navigate = useNavigate();
 
@@ -32,15 +35,21 @@ export default function Signin() {
     setLoader(true);
     try {
       const res = await axios.post(
-        "http://62.72.0.179:5000/auth/login",
+        "http://62.72.0.179:5000/auth/loginForAdmin",
         values
       );
       if (res.data.token) {
+        dispatch(
+          setUser({ name: res.data?.data?.fullname, id: res.data?.data?.id })
+        );
         localStorage.setItem("_token", res.data.token);
         navigate("/dashboard");
       } else {
-        notification.error({ message: "Invalid credentials" });
-        alert("Invalid credentials");
+        notification.error({
+          ...notificationConfig,
+          message: "Invalid credentials",
+          description: "Please check email/contact number and password",
+        });
       }
     } catch (error) {
       error.response?.data?.message === "Unauthorized"
@@ -62,7 +71,7 @@ export default function Signin() {
       {loader && <Loader />}
       <div className="bg-black">
         <div className="mt-14 ml-14">
-          <img src={logo} alt="logo.png" className="h-6 w-32" />
+          <img src={logo} alt="logo.svg" className="h-6 w-32" />
           <div className="mt-6">
             <p
               style={{

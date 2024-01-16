@@ -1,17 +1,26 @@
 import signupImage from "../assets/signupImage.png";
-import logo from "../assets/logo.png";
+import logo from "../assets/logo.svg";
 import * as Yup from "yup";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { Input, Typography, notification } from "antd";
-import { useEffect } from "react";
 import { notificationConfig } from "../config/NotificationConfig";
+import { useDispatch } from "react-redux";
+import { setUser } from "../redux/userSlice";
 
 const validationSchema = Yup.object({
-  fullname: Yup.string().required("Full name is required"),
-  email: Yup.string().required("Email is required"),
-  contact: Yup.string().required("Contact number is required"),
+  fullname: Yup.string()
+    .required("Full name is required")
+    .max(20, "Full name must be less then 20 characters"),
+  email: Yup.string().email().required("Email is required"),
+  contact: Yup.string()
+    .required("Contact number is required")
+    .max(15, "Contact number must be less than 10 digits")
+    .matches(
+      /^[0-9+]+$/,
+      "Contact number must not contain alphabetic characters"
+    ),
   password: Yup.string()
     .required("Password is required")
     .matches(
@@ -33,14 +42,29 @@ const initialValues = {
 
 export default function Signup() {
   let navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const onSubmit = async (values) => {
-    console.log("Form data submitted:", values);
-    const res = await axios.post("http://62.72.0.179:5000/auth/signup", values);
-    if (res.data.success) {
-      localStorage.setItem("_token", res.data.object.token);
-      navigate("/dashboard");
-    } else {
+    try {
+      const res = await axios.post(
+        "http://62.72.0.179:5000/auth/signup",
+        values
+      );
+      if (res.data.success) {
+        localStorage.setItem("_token", res.data.object.token);
+        dispatch(
+          setUser({
+            name: res.data.object?.user?.fullname,
+            id: res.data.object?.user?.id,
+          })
+        );
+        navigate("/dashboard");
+      } else {
+        notification.error({
+          ...notificationConfig,
+          message: "Something went wrong",
+        });
+      }
+    } catch (error) {
       notification.error({
         ...notificationConfig,
         message: "Something went wrong",
@@ -52,7 +76,7 @@ export default function Signup() {
     <div className="grid grid-cols-2 h-screen">
       <div className="bg-black">
         <div className="mt-14 ml-14">
-          <img src={logo} alt="logo.png" className="h-6 w-32" />
+          <img src={logo} alt="logo.svg" className="h-6 w-32" />
           <div className="mt-6">
             <p
               style={{
