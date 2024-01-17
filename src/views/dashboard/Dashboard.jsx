@@ -1,4 +1,4 @@
-import { Flex, theme } from "antd";
+import { Col, Flex, Row, theme } from "antd";
 import React from "react";
 import AdminLayout from "../../layouts/AdminLayout";
 import { Content } from "antd/es/layout/layout";
@@ -11,14 +11,13 @@ var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 const options = {
   animationEnabled: true,
   title: {
-    text: "Monthly Sales - 2017",
+    text: "Active users",
   },
   axisX: {
     valueFormatString: "MMM",
   },
   axisY: {
-    title: "Sales (in USD)",
-    prefix: "$",
+    title: "Days",
   },
   data: [
     {
@@ -54,76 +53,29 @@ export default function Dashboard() {
           overflow: "initial",
         }}
       >
-        <Flex
-          gap={49}
-          style={{ marginTop: 16, marginBottom: 16, marginLeft: 32 }}
-        >
-          <div
-            style={{
-              width: 260,
-              height: 88,
-              background: "#3D3B35",
-              alignItems: "center",
-              borderRadius: 8,
-            }}
-          >
-            <Flex gap={16}>
-              <FiUser style={{ fontSize: 24 }} />
-              <div>
-                <p>400</p>
-                <p>Users</p>
-              </div>
-            </Flex>
-          </div>
-          <div
-            style={{
-              width: 260,
-              height: 88,
-              background: "#3D3B35",
-              borderRadius: 8,
-            }}
-          >
-            2
-          </div>
-          <div
-            style={{
-              width: 260,
-              height: 88,
-              background: "#3D3B35",
-              borderRadius: 8,
-            }}
-          >
-            3
-          </div>
-          <div
-            style={{
-              width: 260,
-              height: 88,
-              background: "#3D3B35",
-              borderRadius: 8,
-            }}
-          >
-            4
-          </div>
-        </Flex>
-        <div
-          style={{
-            padding: 24,
-            textAlign: "center",
-            background: colorBgContainer,
-            borderRadius: borderRadiusLG,
-          }}
-        >
-          <Flex>
-            <div>
-              <CanvasJSChart options={options} />
-            </div>
-            <div>
-              {/* ritesh
-              <CanvasJSChart options={options} /> */}
-            </div>
-          </Flex>
-        </div>
+        <Row justify={"space-evenly"} className="mt-8 mb-8 h-24">
+          <Col style={{ backgroundColor: "#3D3B35" }} span={4}>
+            col-1
+          </Col>
+          <Col style={{ backgroundColor: "#3D3B35" }} span={4}>
+            col-2
+          </Col>
+          <Col style={{ backgroundColor: "#3D3B35" }} span={4}>
+            col-3
+          </Col>
+          <Col style={{ backgroundColor: "#3D3B35" }} span={4}>
+            col-4
+          </Col>
+        </Row>
+
+        <Row justify={"space-evenly"} className="mt-10 mb-8 h-auto">
+          <Col style={{ backgroundColor: "#3D3B35" }} span={10}>
+            <CanvasJSChart options={options} />
+          </Col>
+          <Col style={{ backgroundColor: "#3D3B35" }} span={10}>
+            <CanvasJSChart options={options} />
+          </Col>
+        </Row>
       </Content>
     </AdminLayout>
   );
