@@ -7,90 +7,29 @@ import { CiFilter } from "react-icons/ci";
 import { notificationConfig } from "../../config/NotificationConfig.js";
 import axios from "axios";
 import Loader from "../../components/Loader.jsx";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const columns = [
   {
     title: "Date",
     dataIndex: "date",
-    render: (text) => (text ? text : "-"),
+    render: (text) => (text ? text.split("T")[0] : "-"),
   },
   {
     title: "Subject",
-    dataIndex: "subject",
+    dataIndex: "title",
     render: (text) => (text ? text : "-"),
   },
   {
     title: "User type",
-    dataIndex: "user_type",
-    render: (text, record) =>
-      text ? <Link to={"/notifications/" + record.id}>{text}</Link> : "-",
+    dataIndex: "target_to",
+    render: (text, record) => (text ? text : "-"),
   },
 ];
-
-const data = [
-  {
-    id: 1,
-    date: "2021-05-31",
-    subject: "Fake",
-    user_type: "New users",
-  },
-  {
-    id: 2,
-    date: "2021-05-31",
-    subject: "Scam or commercial",
-    user_type: "D7 users",
-  },
-  {
-    id: 3,
-    date: "2021-05-31",
-    subject: "Scam or commercial",
-    user_type: "New users",
-  },
-  {
-    id: 4,
-    date: "2021-05-31",
-    subject: "Underage",
-    user_type: "New users",
-  },
-  {
-    id: 5,
-    date: "2021-05-31",
-    subject: "Underage",
-    user_type: "New users",
-  },
-  {
-    id: 6,
-    date: "2021-05-31",
-    subject: "Underage",
-    user_type: "New users",
-  },
-  {
-    id: 7,
-    date: "2021-05-31",
-    subject: "Underage",
-    user_type: "New users",
-  },
-];
-
-// rowSelection object indicates the need for row selection
-const rowSelection = {
-  onChange: (selectedRowKeys, selectedRows) => {
-    console.log(
-      `selectedRowKeys: ${selectedRowKeys}`,
-      "selectedRows: ",
-      selectedRows
-    );
-  },
-  getCheckboxProps: (record) => ({
-    disabled: record.name === "Disabled User",
-    // Column configuration not to be checked
-    name: record.name,
-  }),
-};
 
 export default function Index() {
-  //   const [data, setData] = useState(null);
+  const navigate = useNavigate();
+  const [data, setData] = useState(null);
   const [pagination, setPagination] = useState(null);
   const [loader, setLoader] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -103,10 +42,10 @@ export default function Index() {
     try {
       setLoader(true);
       const res = await axios.get(
-        `http://62.72.0.179:5000/api/getAllreports?page=${page}&pageSize=10`
+        `http://62.72.0.179:5000/api/notifications/getAll?page=${page}&pageSize=10`
       );
       if (res.data.success) {
-        // setData(res.data.data);
+        setData(res.data.data);
         setPagination(res.data.pagination);
       } else {
         notification.error({
@@ -124,7 +63,7 @@ export default function Index() {
     }
   };
   useEffect(() => {
-    // getData(currentPage);
+    getData(currentPage);
   }, [currentPage]);
 
   return (
@@ -192,18 +131,19 @@ export default function Index() {
         </Flex>
         <div>
           <Table
-            // rowSelection={{
-            //   type: "checkbox",
-            //   ...rowSelection,
-            // }}
             style={{
               marginLeft: 24,
               marginRight: 74,
             }}
-            // rowClassName={"bg-black text-gray-300 m-1 border-1 "}
+            onRow={(record, rowIndex) => {
+              return {
+                onClick: (event) => {
+                  navigate("/notifications/" + record.id);
+                },
+              };
+            }}
+            rowClassName={"cursor-pointer"}
             sticky
-            // scroll={{ y: "calc(100vh - 100px)" }}
-            // height="300"
             responsive
             pagination={false}
             columns={columns}
