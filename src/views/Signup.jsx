@@ -313,7 +313,7 @@ export default function Signup() {
         </div>
       </div>
       <div>
-        <img src={signupImage} alt="signup.png" />
+        <img src={signupImage} alt="signup.png"  className="loginimg"/>
       </div>
     </div>
   );

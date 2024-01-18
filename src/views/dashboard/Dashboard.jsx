@@ -20,52 +20,71 @@ export default function Dashboard() {
           gap={49}
           style={{ marginTop: 16, marginBottom: 16, marginLeft: 32 }}
         >
-          <div
+          <div className="cardbox"
             style={{
-              width: 260,
-              height: 88,
+              // width: 260,
+              // height: 88,
               background: "#3D3B35",
               alignItems: "center",
               borderRadius: 8,
+              padding:15,
             }}
           >
             <Flex gap={16}>
-              <FiUser style={{ fontSize: 24 }} />
+              <div className="iconbox"><FiUser  style={{ fontSize: 24 }} /></div>
               <div>
-                <p>400</p>
+                <h3>400</h3>
                 <p>Users</p>
               </div>
             </Flex>
           </div>
-          <div
+          <div className="cardbox"
             style={{
-              width: 260,
-              height: 88,
+              // width: 260,
+              // height: 88,
               background: "#3D3B35",
-              borderRadius: 8,
+              borderRadius: 8, padding:15,
             }}
           >
-            2
+           <Flex gap={16}>
+              <div className="iconbox"><FiUser  style={{ fontSize: 24 }} /></div>
+              <div>
+                <h3>800</h3>
+                <p>Active Users</p>
+              </div>
+            </Flex>
           </div>
-          <div
+          <div className="cardbox"
             style={{
-              width: 260,
-              height: 88,
+              // width: 260,
+              // height: 88,
               background: "#3D3B35",
-              borderRadius: 8,
+              borderRadius: 8, padding:15,
             }}
           >
-            3
+            <Flex gap={16}>
+              <div className="iconbox"><FiUser  style={{ fontSize: 24 }} /></div>
+              <div>
+                <h3>800</h3>
+                <p>Number of seesions</p>
+              </div>
+            </Flex>
           </div>
-          <div
+          <div className="cardbox"
             style={{
-              width: 260,
-              height: 88,
+              // width: 260,
+              // height: 88,
               background: "#3D3B35",
-              borderRadius: 8,
+              borderRadius: 8, padding:15,
             }}
           >
-            4
+            <Flex gap={16}>
+              <div className="iconbox"><FiUser  style={{ fontSize: 24 }} /></div>
+              <div>
+                <h3>60%</h3>
+                <p>Match Ratio</p>
+              </div>
+            </Flex>
           </div>
         </Flex>
         <div
