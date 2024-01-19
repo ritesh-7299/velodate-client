@@ -1,43 +1,28 @@
-import {
-  Button,
-  Col,
-  Divider,
-  Flex,
-  Input,
-  Modal,
-  Row,
-  Select,
-  Switch,
-  Upload,
-  notification,
-} from "antd";
+import { Col, Flex, Input, Row, Select, notification } from "antd";
 import axios from "axios";
-import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useState } from "react";
 import Loader from "../../components/Loader";
 import { notificationConfig } from "../../config/NotificationConfig";
-import chevronUp from "../../assets/chevronUp.svg";
 import AdminLayout from "../../layouts/AdminLayout";
 import { Content, Footer } from "antd/es/layout/layout";
-import { FaPlus } from "react-icons/fa6";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import TextArea from "antd/es/input/TextArea";
 
 const validationSchema = Yup.object({
-  subject: Yup.string().required("Title is required"),
-  body: Yup.string().required("Message is required"),
+  title: Yup.string().required("Title is required"),
+  message: Yup.string().required("Message is required"),
 });
 
 const initialValues = {
-  user_type: "",
-  subject: "",
-  body: "",
+  target_to: "",
+  title: "",
+  message: "",
 };
 
 export default function NewNotification() {
-  let navigate = useNavigate();
-  const [userType, setUserType] = useState(null);
+  const [userType, setUserType] = useState("all_users");
+  const [loader, setLoader] = useState(false);
   const handleChange = (value) => {
     setUserType(value);
   };
@@ -57,19 +42,20 @@ export default function NewNotification() {
   };
 
   const onSubmit = async (values) => {
-    if (userType) {
-      values["user_type"] = userType;
-    }
-    console.log("🚀 ~ onSubmit ~ values:", values);
-    alert("Api integration is remaining");
-    return;
     try {
+      setLoader(true);
+      if (userType) {
+        values["target_to"] = userType;
+      }
       const res = await axios.post(
-        "http://62.72.0.179:5000/auth/signup",
+        "http://62.72.0.179:5000/api/notifications/send",
         values
       );
       if (res.data.success) {
-        navigate("/notifications");
+        notification.success({
+          ...notificationConfig,
+          message: "Notification has been sent successfully",
+        });
       } else {
         notification.error({
           ...notificationConfig,
@@ -81,11 +67,14 @@ export default function NewNotification() {
         ...notificationConfig,
         message: "Something went wrong",
       });
+    } finally {
+      setLoader(false);
     }
   };
 
   return (
     <AdminLayout header={"Push Notification"}>
+      {loader && <Loader />}
       <Content
         style={{
           background: "#000",
@@ -150,8 +139,8 @@ export default function NewNotification() {
                   className="mt-4"
                 >
                   <Field
-                    id="user_type"
-                    name="user_type"
+                    id="target_to"
+                    name="target_to"
                     render={({ field }) => (
                       <Select
                         {...field}
@@ -160,16 +149,15 @@ export default function NewNotification() {
                         value={userType}
                         style={{ width: 320, borderRadius: 5 }}
                         options={[
-                          { value: 1, label: "Lucy" },
-                          { value: 2, label: "Ritesh" },
-                          { value: 3, label: "xyz" },
+                          { value: "new_users", label: "New Users" },
+                          { value: "all_users", label: "All Users" },
                         ]}
                       />
                     )}
                   />
                   <ErrorMessage
                     className="text-gray-300 text-xs"
-                    name="user_type"
+                    name="target_to"
                     component="div"
                   />
                 </Col>
@@ -186,12 +174,12 @@ export default function NewNotification() {
                   className="mt-4"
                 >
                   <Field
-                    id="subject"
-                    name="subject"
+                    id="title"
+                    name="title"
                     render={({ field }) => (
                       <Input
                         {...field}
-                        id="subject"
+                        id="title"
                         size="middle"
                         style={{ width: 320, borderRadius: 5 }}
                         placeholder="Enter the title"
@@ -200,7 +188,7 @@ export default function NewNotification() {
                   />
                   <ErrorMessage
                     className="text-gray-300 text-xs"
-                    name="subject"
+                    name="title"
                     component="div"
                   />
                 </Col>
@@ -217,8 +205,8 @@ export default function NewNotification() {
                   className="mt-4"
                 >
                   <Field
-                    id="body"
-                    name="body"
+                    id="message"
+                    name="message"
                     render={({ field }) => (
                       <TextArea
                         {...field}
@@ -230,7 +218,7 @@ export default function NewNotification() {
                   />
                   <ErrorMessage
                     className="text-gray-300 text-xs"
-                    name="body"
+                    name="message"
                     component="div"
                   />
                 </Col>

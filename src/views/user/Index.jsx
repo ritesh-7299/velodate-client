@@ -25,7 +25,7 @@ const columns = [
   {
     title: "DOB",
     dataIndex: "birthdate",
-    render: (text) => (text ? text : "-"),
+    render: (text) => (text ? text.split("T")[0] : "-"),
   },
   {
     title: "Phone",
@@ -156,10 +156,9 @@ export default function Index() {
         </Flex>
         <div>
           <Table
-            rowSelection={{
-              type: "checkbox",
-              ...rowSelection,
-            }}
+            // rowSelection={{
+            //   ...rowSelection,
+            // }}
             style={{
               marginLeft: 24,
               marginRight: 74,

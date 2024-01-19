@@ -151,10 +151,10 @@ export default function Index() {
         </Flex>
         <div>
           <Table
-            rowSelection={{
-              type: "checkbox",
-              ...rowSelection,
-            }}
+            // rowSelection={{
+            //   type: "checkbox",
+            //   ...rowSelection,
+            // }}
             style={{
               marginLeft: 24,
               marginRight: 74,

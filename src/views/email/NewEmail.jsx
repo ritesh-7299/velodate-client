@@ -56,6 +56,26 @@ export default function NewEmail() {
     },
   };
 
+  const props = {
+    name: "file",
+    action: "https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188",
+    headers: {
+      authorization: "authorization-text",
+    },
+    onChange(info) {
+      if (info.file.status !== "uploading") {
+        console.log(info.file, info.fileList);
+      }
+      if (info.file.status === "done") {
+        // message.success();
+        alert(`${info.file.name} file uploaded successfully`);
+      } else if (info.file.status === "error") {
+        // message.error();
+        alert(`${info.file.name} file upload failed.`);
+      }
+    },
+  };
+
   const onSubmit = async (values) => {
     if (userType) {
       values["user_type"] = userType;
@@ -232,6 +252,28 @@ export default function NewEmail() {
                     className="text-gray-300 text-xs"
                     name="body"
                     component="div"
+                  />
+                </Col>
+                <Col
+                  style={{ ...styles.headingStyle }}
+                  span={4}
+                  className="mt-4"
+                >
+                  Add file
+                </Col>
+                <Col
+                  style={{ ...styles.answerStyle }}
+                  span={20}
+                  className="mt-4"
+                >
+                  <Field
+                    id="body"
+                    name="body"
+                    render={({ field }) => (
+                      <Upload {...props} className="text-white">
+                        <Button className="text-white">Click to Upload</Button>
+                      </Upload>
+                    )}
                   />
                 </Col>
               </Row>
