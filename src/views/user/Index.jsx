@@ -1,6 +1,15 @@
 import React, { useEffect, useState } from "react";
 import AdminLayout from "../../layouts/AdminLayout";
-import { Button, Flex, Pagination, Table, notification } from "antd";
+import {
+  Button,
+  Checkbox,
+  Divider,
+  Flex,
+  Pagination,
+  Popover,
+  Table,
+  notification,
+} from "antd";
 import { Content, Footer } from "antd/es/layout/layout";
 import { FaSortAmountDown } from "react-icons/fa";
 import { CiFilter } from "react-icons/ci";
@@ -49,24 +58,9 @@ const columns = [
   },
 ];
 
-// rowSelection object indicates the need for row selection
-const rowSelection = {
-  onChange: (selectedRowKeys, selectedRows) => {
-    console.log(
-      `selectedRowKeys: ${selectedRowKeys}`,
-      "selectedRows: ",
-      selectedRows
-    );
-  },
-  getCheckboxProps: (record) => ({
-    disabled: record.name === "Disabled User",
-    // Column configuration not to be checked
-    name: record.name,
-  }),
-};
-
 export default function Index() {
   const [data, setData] = useState(null);
+  // const [filter, setFilter] = useState(null);
   const [pagination, setPagination] = useState(null);
   const [loader, setLoader] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -99,12 +93,66 @@ export default function Index() {
       setLoader(false);
     }
   };
+
+  const changeFilter = async (e) => {
+    try {
+      setLoader(true);
+      let filterData = {};
+      filterData[e.target.name] = e.target.checked ? e.target.value : "";
+      const res = await axios.post(
+        "http://62.72.0.179:5000/api/filterUsers",
+        filterData
+      );
+      if (res.data?.success) {
+        setData(res.data.data);
+        setPagination(res.data.pagination);
+      } else {
+        notification.error({
+          ...notificationConfig,
+          message: "Something went wrong",
+        });
+      }
+    } catch (error) {
+      notification.error({
+        ...notificationConfig,
+        message: "Something went wrong",
+      });
+    } finally {
+      setLoader(false);
+    }
+  };
+
+  const onSearch = async (data) => {
+    try {
+      setLoader(true);
+      const res = await axios.get(
+        "http://62.72.0.179:5000/api/search?fullname=" + data
+      );
+      if (res.data?.success) {
+        setData(res.data.data);
+        setPagination(res.data.pagination);
+      } else {
+        notification.error({
+          ...notificationConfig,
+          message: "Something went wrong",
+        });
+      }
+    } catch (error) {
+      notification.error({
+        ...notificationConfig,
+        message: "Something went wrong",
+      });
+    } finally {
+      setLoader(false);
+    }
+  };
+
   useEffect(() => {
     getData(currentPage);
   }, [currentPage]);
 
   return (
-    <AdminLayout header={"Users"}>
+    <AdminLayout header={"Users"} onSearch={onSearch}>
       {loader && <Loader />}
       <Content
         style={{
@@ -133,20 +181,68 @@ export default function Index() {
             }}
           >
             <Flex justify="flex-end" gap={8}>
-              <CiFilter
-                style={{
-                  height: 32,
-                  width: 32,
-                  padding:5,
-                  color: "white",
-                  border: "1px solid gray",
-                }}
-              />
+              <Popover
+                content={
+                  <div>
+                    Gender
+                    <p>
+                      <Checkbox
+                        name={"gender"}
+                        value={"man"}
+                        onChange={changeFilter}
+                      >
+                        Male
+                      </Checkbox>
+                    </p>
+                    <p>
+                      <Checkbox
+                        name={"gender"}
+                        value={"woman"}
+                        onChange={changeFilter}
+                      >
+                        Female
+                      </Checkbox>
+                    </p>
+                    <Divider />
+                    Status
+                    <p>
+                      <Checkbox
+                        name={"status"}
+                        value={"active"}
+                        onChange={changeFilter}
+                      >
+                        Active
+                      </Checkbox>
+                    </p>
+                    <p>
+                      <Checkbox
+                        name={"status"}
+                        value={"inactive"}
+                        onChange={changeFilter}
+                      >
+                        Inactive
+                      </Checkbox>
+                    </p>
+                  </div>
+                }
+                trigger="click"
+                className="cursor-pointer"
+              >
+                <CiFilter
+                  style={{
+                    height: 32,
+                    width: 32,
+                    padding: 5,
+                    color: "white",
+                    border: "1px solid gray",
+                  }}
+                />
+              </Popover>
               <FaSortAmountDown
                 style={{
                   height: 32,
                   width: 32,
-                  padding:5,
+                  padding: 5,
                   color: "white",
                   border: "1px solid gray",
                 }}

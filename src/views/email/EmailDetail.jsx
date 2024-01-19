@@ -1,36 +1,17 @@
-import {
-  Button,
-  Col,
-  Divider,
-  Flex,
-  Modal,
-  Row,
-  Switch,
-  Upload,
-  notification,
-} from "antd";
+import { Button, Col, Flex, Row, notification } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Loader from "../../components/Loader";
 import { notificationConfig } from "../../config/NotificationConfig";
-import chevronUp from "../../assets/chevronUp.svg";
 import AdminLayout from "../../layouts/AdminLayout";
 import { Content, Footer } from "antd/es/layout/layout";
-import { FaPlus } from "react-icons/fa6";
 import { RiAttachment2 } from "react-icons/ri";
 
-const demoData = {
-  date: "25/5/2023",
-  user_type: "New users",
-  subject: "New Function",
-  body: "Lorem ipsum dolor sit amet consectetur. Viverra volutpat aliquam at fames ac enim.",
-  file: "abc.png",
-};
-
 export default function EmailDetail() {
-  const { notificationId } = useParams();
+  const { emailId } = useParams();
   const [data, setData] = useState(null);
+  const [loader, setLoader] = useState(false);
 
   const styles = {
     headingStyle: {
@@ -49,24 +30,26 @@ export default function EmailDetail() {
 
   const fetchData = async () => {
     try {
-      setData(demoData);
-      //   const res = await axios.get(
-      //     `http://62.72.0.179:5000/api/users/${userId}`
-      //   );
-      //   if (res.data.success) {
-      //     setData(res.data.object);
-      //   } else {
-      //     notification.error({
-      //       ...notificationConfig,
-      //       message: "Something went wrong",
-      //     });
-      //   }
+      setLoader(true);
+      const res = await axios.get(
+        `http://62.72.0.179:5000/api/email/getEmailById/${emailId}`
+      );
+      console.log("🚀 ~ fetchData ~ res:", res);
+      if (res.data.success) {
+        setData(res.data.object[0]);
+      } else {
+        notification.error({
+          ...notificationConfig,
+          message: "Something went wrong",
+        });
+      }
     } catch (error) {
       notification.error({
         ...notificationConfig,
         message: "Something went wrong",
       });
     } finally {
+      setLoader(false);
     }
   };
   useEffect(() => {
@@ -75,6 +58,7 @@ export default function EmailDetail() {
 
   return (
     <AdminLayout header={"Push Email"}>
+      {loader && <Loader />}
       {data ? (
         <>
           <Content
@@ -143,7 +127,7 @@ export default function EmailDetail() {
                   span={20}
                   className="mt-4"
                 >
-                  {data?.date ? data.date : "-"}
+                  {data?.date ? data.date.split("T")[0] : "-"}
                 </Col>
                 <Col
                   style={{ ...styles.headingStyle }}
@@ -157,7 +141,7 @@ export default function EmailDetail() {
                   span={20}
                   className="mt-4"
                 >
-                  {data?.user_type ? data.user_type : "-"}
+                  {data?.target_to ? data.target_to : "-"}
                 </Col>
                 <Col
                   style={{ ...styles.headingStyle }}
@@ -171,7 +155,7 @@ export default function EmailDetail() {
                   span={20}
                   className="mt-4"
                 >
-                  {data?.subject ? data.subject : "-"}
+                  {data?.title ? data.title : "-"}
                 </Col>
                 <Col
                   style={{ ...styles.headingStyle }}
@@ -185,7 +169,7 @@ export default function EmailDetail() {
                   span={20}
                   className="mt-4"
                 >
-                  {data?.body ? data.body : "-"}
+                  {data?.message ? data.message : "-"}
                 </Col>
                 <Col
                   style={{ ...styles.headingStyle }}
@@ -199,8 +183,13 @@ export default function EmailDetail() {
                   span={20}
                   className="mt-4"
                 >
-                  <RiAttachment2 />
-                  {data?.file ? data.file : "-"}
+                  {data?.file ? (
+                    <>
+                      <RiAttachment2 /> {data.file}
+                    </>
+                  ) : (
+                    "-"
+                  )}
                 </Col>
               </Row>
             </div>

@@ -9,57 +9,6 @@ import { notificationConfig } from "../../config/NotificationConfig.js";
 import axios from "axios";
 import Loader from "../../components/Loader.jsx";
 
-const columns = [
-  {
-    title: "User",
-    dataIndex: "sender",
-    render: (text) => (text ? text : "-"),
-  },
-  {
-    title: "Report type",
-    dataIndex: "report_type",
-    render: (text) => (text ? text : "-"),
-  },
-  {
-    title: "Receiver",
-    dataIndex: "receiver",
-    render: (text) => (text ? text : "-"),
-  },
-  {
-    title: "Date created",
-    dataIndex: "contact",
-    render: (text) => (text ? text : "-"),
-  },
-  {
-    title: "Status",
-    dataIndex: "isactive",
-    render: (text) =>
-      text !== "active" ? (
-        <Button style={{ borderColor: "green", color: "gray" }}>
-          Resolved
-        </Button>
-      ) : (
-        <Button style={{ borderColor: "red", color: "gray" }}>Active</Button>
-      ),
-  },
-];
-
-// rowSelection object indicates the need for row selection
-const rowSelection = {
-  onChange: (selectedRowKeys, selectedRows) => {
-    console.log(
-      `selectedRowKeys: ${selectedRowKeys}`,
-      "selectedRows: ",
-      selectedRows
-    );
-  },
-  getCheckboxProps: (record) => ({
-    disabled: record.name === "Disabled User",
-    // Column configuration not to be checked
-    name: record.name,
-  }),
-};
-
 export default function Index() {
   const [data, setData] = useState(null);
   const [pagination, setPagination] = useState(null);
@@ -98,6 +47,76 @@ export default function Index() {
     getData(currentPage);
   }, [currentPage]);
 
+  const changeStatus = async (status, id) => {
+    try {
+      setLoader(true);
+      const res = await axios.put("http://62.72.0.179:5000/api/reports/" + id, {
+        report_status: status,
+      });
+      if (res.data?.success) {
+        notification.success({
+          ...notificationConfig,
+          message: "Report status updated successfully",
+        });
+        getData(currentPage);
+      } else {
+        notification.error({
+          ...notificationConfig,
+          message: "Something went wrong",
+        });
+      }
+    } catch (error) {
+      notification.error({
+        ...notificationConfig,
+        message: "Something went wrong",
+      });
+    } finally {
+      setLoader(false);
+    }
+  };
+
+  const columns = [
+    {
+      title: "User",
+      dataIndex: "sender",
+      render: (text) => (text ? text : "-"),
+    },
+    {
+      title: "Report type",
+      dataIndex: "report_type",
+      render: (text) => (text ? text : "-"),
+    },
+    {
+      title: "Receiver",
+      dataIndex: "receiver",
+      render: (text) => (text ? text : "-"),
+    },
+    {
+      title: "Date created",
+      dataIndex: "contact",
+      render: (text) => (text ? text : "-"),
+    },
+    {
+      title: "Status",
+      dataIndex: "report_status",
+      render: (text, record) =>
+        text != "active" ? (
+          <Button
+            onClick={() => changeStatus("active", record.report_id)}
+            style={{ borderColor: "green", color: "gray" }}
+          >
+            Resolved
+          </Button>
+        ) : (
+          <Button
+            onClick={() => changeStatus("resolved", record.report_id)}
+            style={{ borderColor: "red", color: "gray" }}
+          >
+            Active
+          </Button>
+        ),
+    },
+  ];
   return (
     <AdminLayout header={"Reports"}>
       {loader && <Loader />}
@@ -132,7 +151,7 @@ export default function Index() {
                 style={{
                   height: 32,
                   width: 32,
-                  padding:5,
+                  padding: 5,
                   color: "white",
                   border: "1px solid gray",
                 }}
@@ -141,7 +160,7 @@ export default function Index() {
                 style={{
                   height: 32,
                   width: 32,
-                  padding:5,
+                  padding: 5,
                   color: "white",
                   border: "1px solid gray",
                 }}
@@ -151,10 +170,6 @@ export default function Index() {
         </Flex>
         <div>
           <Table
-            // rowSelection={{
-            //   type: "checkbox",
-            //   ...rowSelection,
-            // }}
             style={{
               marginLeft: 24,
               marginRight: 74,

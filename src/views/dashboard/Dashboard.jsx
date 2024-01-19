@@ -1,9 +1,11 @@
-import { Col, Flex, Row, theme } from "antd";
-import React from "react";
+import { Col, Flex, Row, notification, theme } from "antd";
+import React, { useEffect, useState } from "react";
 import AdminLayout from "../../layouts/AdminLayout";
 import { Content } from "antd/es/layout/layout";
 import { FiUser } from "react-icons/fi";
 import CanvasJSReact from "@canvasjs/react-charts";
+import axios from "axios";
+import { notificationConfig } from "../../config/NotificationConfig.js";
 
 var CanvasJS = CanvasJSReact.CanvasJS;
 var CanvasJSChart = CanvasJSReact.CanvasJSChart;
@@ -42,9 +44,30 @@ const options = {
   ],
 };
 export default function Dashboard() {
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
+  const [counts, setCounts] = useState(null);
+
+  const setCountData = async () => {
+    try {
+      const res = await axios.get("http://62.72.0.179:5000/api/counts");
+      if (res.data.success) {
+        setCounts(res.data.data);
+      } else {
+        notification.error({
+          ...notificationConfig,
+          message: "Something went wrong",
+        });
+      }
+    } catch (error) {
+      notification.error({
+        ...notificationConfig,
+        message: "Something went wrong",
+      });
+    }
+  };
+  useEffect(() => {
+    setCountData();
+  }, [counts]);
+
   return (
     <AdminLayout header={"Dashboard"}>
       <Content
@@ -57,111 +80,90 @@ export default function Dashboard() {
           gap={49}
           style={{ marginTop: 16, marginBottom: 16, marginLeft: 32 }}
         >
-          <div className="cardbox"
+          <div
+            className="cardbox"
             style={{
               // width: 260,
               // height: 88,
               background: "#3D3B35",
               alignItems: "center",
               borderRadius: 8,
-              padding:15,
+              padding: 15,
             }}
           >
             <Flex gap={16}>
-              <div className="iconbox"><FiUser  style={{ fontSize: 24 }} /></div>
+              <div className="iconbox">
+                <FiUser style={{ fontSize: 24 }} />
+              </div>
               <div>
-                <h3>400</h3>
+                <h3>{counts?.new_users ? counts?.new_users : ""}</h3>
                 <p>Users</p>
               </div>
             </Flex>
           </div>
-          <div className="cardbox"
+          <div
+            className="cardbox"
             style={{
               // width: 260,
               // height: 88,
               background: "#3D3B35",
-              borderRadius: 8, padding:15,
+              borderRadius: 8,
+              padding: 15,
             }}
           >
-           <Flex gap={16}>
-              <div className="iconbox"><FiUser  style={{ fontSize: 24 }} /></div>
+            <Flex gap={16}>
+              <div className="iconbox">
+                <FiUser style={{ fontSize: 24 }} />
+              </div>
               <div>
-                <h3>800</h3>
+                <h3>{counts?.active_users ? counts?.active_users : ""}</h3>
                 <p>Active Users</p>
               </div>
             </Flex>
           </div>
-          <div className="cardbox"
+          <div
+            className="cardbox"
             style={{
               // width: 260,
               // height: 88,
               background: "#3D3B35",
-              borderRadius: 8, padding:15,
+              borderRadius: 8,
+              padding: 15,
             }}
           >
             <Flex gap={16}>
-              <div className="iconbox"><FiUser  style={{ fontSize: 24 }} /></div>
+              <div className="iconbox">
+                <FiUser style={{ fontSize: 24 }} />
+              </div>
               <div>
-                <h3>800</h3>
-                <p>Number of seesions</p>
+                <h3>{counts?.meetups ? counts?.meetups : ""}</h3>
+                <p>Meetups</p>
               </div>
             </Flex>
           </div>
-          <div className="cardbox"
+          <div
+            className="cardbox"
             style={{
               // width: 260,
               // height: 88,
               background: "#3D3B35",
-              borderRadius: 8, padding:15,
+              borderRadius: 8,
+              padding: 15,
             }}
           >
             <Flex gap={16}>
-              <div className="iconbox"><FiUser  style={{ fontSize: 24 }} /></div>
+              <div className="iconbox">
+                <FiUser style={{ fontSize: 24 }} />
+              </div>
               <div>
-                <h3>60%</h3>
+                <h3>
+                  {counts?.match_ratio ? counts?.match_ratio + "%" : "0%"}
+                </h3>
                 <p>Match Ratio</p>
               </div>
             </Flex>
           </div>
         </Flex>
-        <div
-          style={{
-            padding: 24,
-            textAlign: "center",
-            background: colorBgContainer,
-            borderRadius: borderRadiusLG,
-          }}
-        >
-          <p>long content</p>
-          {
-            // indicates very long content
-            Array.from(
-              {
-                length: 100,
-              },
-              (_, index) => (
-                <React.Fragment key={index}>
-                  {index % 20 === 0 && index ? "more" : "..."}
-                  <br />
-                </React.Fragment>
-              )
-            )
-          }
-        </div>
-        <Row justify={"space-evenly"} className="mt-8 mb-8 h-24">
-          <Col style={{ backgroundColor: "#3D3B35" }} span={4}>
-            col-1
-          </Col>
-          <Col style={{ backgroundColor: "#3D3B35" }} span={4}>
-            col-2
-          </Col>
-          <Col style={{ backgroundColor: "#3D3B35" }} span={4}>
-            col-3
-          </Col>
-          <Col style={{ backgroundColor: "#3D3B35" }} span={4}>
-            col-4
-          </Col>
-        </Row>
 
         <Row justify={"space-evenly"} className="mt-10 mb-8 h-auto">
           <Col style={{ backgroundColor: "#3D3B35" }} span={10}>

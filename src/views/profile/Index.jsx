@@ -114,6 +114,7 @@ export default function Index() {
   const fetchData = async () => {
     try {
       const res = await axios.get(`http://62.72.0.179:5000/auth/getUser`);
+      console.log("🚀 ~ fetchData ~ res:", res);
       if (res.data.success) {
         setData(res.data.user);
       } else {

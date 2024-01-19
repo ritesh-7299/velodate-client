@@ -27,7 +27,7 @@ const items = [
   label: `nav ${index + 1}`,
 }));
 
-const AdminLayout = ({ children, header }) => {
+const AdminLayout = ({ children, header, onSearch }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const username = useSelector((state) => state.user.name);
@@ -113,7 +113,6 @@ const AdminLayout = ({ children, header }) => {
               case "1":
                 navigate("/dashboard");
                 break;
-              
 
               case "2":
                 navigate("/users");
@@ -169,16 +168,20 @@ const AdminLayout = ({ children, header }) => {
               {header}
             </div>
             <Flex>
-              <Search
-                placeholder="Search here..."
-                allowClear
-                // onSearch={onSearch}
-                style={{
-                  width: 200,
-                  background: "#3D3B35",
-                }}
-              />
-              <FiUser className="user"
+              {header != "Dashboard" && (
+                <Search
+                  placeholder="Search here..."
+                  allowClear
+                  onSearch={onSearch}
+                  style={{
+                    width: 200,
+                    background: "#3D3B35",
+                  }}
+                />
+              )}
+
+              <FiUser
+                className="user"
                 style={{
                   fontSize: "24px",
                   marginLeft: 24,
@@ -199,7 +202,8 @@ const AdminLayout = ({ children, header }) => {
               >
                 <Link to={"/profile"}>{username ? username : ""}</Link>
               </p>
-              <IoMdNotificationsOutline  className="user"
+              <IoMdNotificationsOutline
+                className="user"
                 style={{
                   fontSize: "24px",
                   marginLeft: 20,

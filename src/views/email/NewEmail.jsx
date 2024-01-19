@@ -1,43 +1,38 @@
 import {
   Button,
   Col,
-  Divider,
   Flex,
   Input,
-  Modal,
   Row,
   Select,
-  Switch,
   Upload,
   notification,
 } from "antd";
 import axios from "axios";
-import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Loader from "../../components/Loader";
 import { notificationConfig } from "../../config/NotificationConfig";
-import chevronUp from "../../assets/chevronUp.svg";
 import AdminLayout from "../../layouts/AdminLayout";
 import { Content, Footer } from "antd/es/layout/layout";
-import { FaPlus } from "react-icons/fa6";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import TextArea from "antd/es/input/TextArea";
 
 const validationSchema = Yup.object({
-  subject: Yup.string().required("Title is required"),
-  body: Yup.string().required("Message is required"),
+  title: Yup.string().required("Title is required"),
+  message: Yup.string().required("Message is required"),
 });
 
 const initialValues = {
   user_type: "",
-  subject: "",
-  body: "",
+  title: "",
+  message: "",
 };
 
 export default function NewEmail() {
   let navigate = useNavigate();
-  const [userType, setUserType] = useState(null);
+  const [userType, setUserType] = useState("all_users");
   const handleChange = (value) => {
     setUserType(value);
   };
@@ -78,18 +73,19 @@ export default function NewEmail() {
 
   const onSubmit = async (values) => {
     if (userType) {
-      values["user_type"] = userType;
+      values["target_to"] = userType;
     }
-    console.log("🚀 ~ onSubmit ~ values:", values);
-    alert("Api integration is remaining");
-    return;
     try {
       const res = await axios.post(
-        "http://62.72.0.179:5000/auth/signup",
+        "http://62.72.0.179:5000/api/email/sendEmail",
         values
       );
       if (res.data.success) {
-        navigate("/notifications");
+        notification.success({
+          ...notificationConfig,
+          message: "Email has been sent successfully",
+        });
+        navigate("/emails");
       } else {
         notification.error({
           ...notificationConfig,
@@ -180,9 +176,8 @@ export default function NewEmail() {
                         value={userType}
                         style={{ width: 320, borderRadius: 5 }}
                         options={[
-                          { value: 1, label: "Lucy" },
-                          { value: 2, label: "Ritesh" },
-                          { value: 3, label: "xyz" },
+                          { value: "new_users", label: "New Users" },
+                          { value: "all_users", label: "All Users" },
                         ]}
                       />
                     )}
@@ -206,12 +201,12 @@ export default function NewEmail() {
                   className="mt-4"
                 >
                   <Field
-                    id="subject"
-                    name="subject"
+                    id="title"
+                    name="title"
                     render={({ field }) => (
                       <Input
                         {...field}
-                        id="subject"
+                        id="title"
                         size="middle"
                         style={{ width: 320, borderRadius: 5 }}
                         placeholder="Enter the title"
@@ -220,7 +215,7 @@ export default function NewEmail() {
                   />
                   <ErrorMessage
                     className="text-gray-300 text-xs"
-                    name="subject"
+                    name="title"
                     component="div"
                   />
                 </Col>
@@ -237,8 +232,8 @@ export default function NewEmail() {
                   className="mt-4"
                 >
                   <Field
-                    id="body"
-                    name="body"
+                    id="message"
+                    name="message"
                     render={({ field }) => (
                       <TextArea
                         {...field}
@@ -250,7 +245,7 @@ export default function NewEmail() {
                   />
                   <ErrorMessage
                     className="text-gray-300 text-xs"
-                    name="body"
+                    name="message"
                     component="div"
                   />
                 </Col>
@@ -267,8 +262,8 @@ export default function NewEmail() {
                   className="mt-4"
                 >
                   <Field
-                    id="body"
-                    name="body"
+                    id="file"
+                    name="file"
                     render={({ field }) => (
                       <Upload {...props} className="text-white">
                         <Button className="text-white">Click to Upload</Button>
