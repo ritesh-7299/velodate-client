@@ -152,11 +152,11 @@ export default function UserDetail() {
                 <Flex vertical className="ml-4">
                   <p
                     style={{
-                      fontSize: "32px",
+                      fontSize: "26px",
                       fontStyle: "normal",
                       fontWeight: 500,
                       lineHeight: "100%",
-                      color: "yellow",
+                      color: "#D19D00",
                     }}
                   >
                     {data?.fullname ? data.fullname : "-"}

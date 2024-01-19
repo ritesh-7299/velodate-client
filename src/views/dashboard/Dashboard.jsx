@@ -53,6 +53,101 @@ export default function Dashboard() {
           overflow: "initial",
         }}
       >
+        <Flex
+          gap={49}
+          style={{ marginTop: 16, marginBottom: 16, marginLeft: 32 }}
+        >
+          <div className="cardbox"
+            style={{
+              // width: 260,
+              // height: 88,
+              background: "#3D3B35",
+              alignItems: "center",
+              borderRadius: 8,
+              padding:15,
+            }}
+          >
+            <Flex gap={16}>
+              <div className="iconbox"><FiUser  style={{ fontSize: 24 }} /></div>
+              <div>
+                <h3>400</h3>
+                <p>Users</p>
+              </div>
+            </Flex>
+          </div>
+          <div className="cardbox"
+            style={{
+              // width: 260,
+              // height: 88,
+              background: "#3D3B35",
+              borderRadius: 8, padding:15,
+            }}
+          >
+           <Flex gap={16}>
+              <div className="iconbox"><FiUser  style={{ fontSize: 24 }} /></div>
+              <div>
+                <h3>800</h3>
+                <p>Active Users</p>
+              </div>
+            </Flex>
+          </div>
+          <div className="cardbox"
+            style={{
+              // width: 260,
+              // height: 88,
+              background: "#3D3B35",
+              borderRadius: 8, padding:15,
+            }}
+          >
+            <Flex gap={16}>
+              <div className="iconbox"><FiUser  style={{ fontSize: 24 }} /></div>
+              <div>
+                <h3>800</h3>
+                <p>Number of seesions</p>
+              </div>
+            </Flex>
+          </div>
+          <div className="cardbox"
+            style={{
+              // width: 260,
+              // height: 88,
+              background: "#3D3B35",
+              borderRadius: 8, padding:15,
+            }}
+          >
+            <Flex gap={16}>
+              <div className="iconbox"><FiUser  style={{ fontSize: 24 }} /></div>
+              <div>
+                <h3>60%</h3>
+                <p>Match Ratio</p>
+              </div>
+            </Flex>
+          </div>
+        </Flex>
+        <div
+          style={{
+            padding: 24,
+            textAlign: "center",
+            background: colorBgContainer,
+            borderRadius: borderRadiusLG,
+          }}
+        >
+          <p>long content</p>
+          {
+            // indicates very long content
+            Array.from(
+              {
+                length: 100,
+              },
+              (_, index) => (
+                <React.Fragment key={index}>
+                  {index % 20 === 0 && index ? "more" : "..."}
+                  <br />
+                </React.Fragment>
+              )
+            )
+          }
+        </div>
         <Row justify={"space-evenly"} className="mt-8 mb-8 h-24">
           <Col style={{ backgroundColor: "#3D3B35" }} span={4}>
             col-1

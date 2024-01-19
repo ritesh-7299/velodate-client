@@ -101,8 +101,9 @@ export default function Index() {
               <Link to={"/add-notification"}>
                 <FaPlus
                   style={{
-                    height: 24,
-                    width: 24,
+                    height: 32,
+                  width: 32,
+                  padding:5,
                     color: "white",
                     cursor: "pointer",
                     border: "1px solid gray",
@@ -111,17 +112,18 @@ export default function Index() {
               </Link>
               <CiFilter
                 style={{
-                  height: 24,
-                  width: 24,
+                  height: 32,
+                  width: 32,
+                  padding:5,
                   color: "white",
                   border: "1px solid gray",
                 }}
               />
               <FaSortAmountDown
                 style={{
-                  height: 24,
-                  width: 24,
-                  padding: 3,
+                  height: 32,
+                  width: 32,
+                  padding:5,
                   color: "white",
                   border: "1px solid gray",
                 }}
@@ -172,7 +174,7 @@ export default function Index() {
           <div>
             {pagination && (
               <Pagination
-                className="bg-white text-white"
+                className="bg-dark text-white"
                 onChange={onChange}
                 defaultCurrent={pagination?.currentPage || 1}
                 total={pagination?.totalItems || 1}

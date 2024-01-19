@@ -99,7 +99,7 @@ const AdminLayout = ({ children, header }) => {
         }}
       >
         <Link to={"/dashboard"}>
-          <img className="ml-4 mt-8" src={logoIcon} alt="logo" />
+          <img className="ml-4 mt-6" src={logoIcon} alt="logo" />
         </Link>
         <Menu
           theme="dark"
@@ -113,6 +113,7 @@ const AdminLayout = ({ children, header }) => {
               case "1":
                 navigate("/dashboard");
                 break;
+              
 
               case "2":
                 navigate("/users");
@@ -177,7 +178,7 @@ const AdminLayout = ({ children, header }) => {
                   background: "#3D3B35",
                 }}
               />
-              <FiUser
+              <FiUser className="user"
                 style={{
                   fontSize: "24px",
                   marginLeft: 24,
@@ -198,7 +199,7 @@ const AdminLayout = ({ children, header }) => {
               >
                 <Link to={"/profile"}>{username ? username : ""}</Link>
               </p>
-              <IoMdNotificationsOutline
+              <IoMdNotificationsOutline  className="user"
                 style={{
                   fontSize: "24px",
                   marginLeft: 20,

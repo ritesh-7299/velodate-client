@@ -196,7 +196,7 @@ export default function ResetPassword() {
         </div>
       </div>
       <div>
-        <img src={signupImage} alt="signup.png" />
+        <img src={signupImage} alt="signup.png" className="loginimg" />
       </div>
       {loader && <Loader />}
     </div>
