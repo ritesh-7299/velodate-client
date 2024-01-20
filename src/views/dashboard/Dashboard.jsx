@@ -10,41 +10,9 @@ import { notificationConfig } from "../../config/NotificationConfig.js";
 var CanvasJS = CanvasJSReact.CanvasJS;
 var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
-const options = {
-  animationEnabled: true,
-  title: {
-    text: "Active users",
-  },
-  axisX: {
-    valueFormatString: "MMM",
-  },
-  axisY: {
-    title: "Days",
-  },
-  data: [
-    {
-      yValueFormatString: "$#,###",
-      xValueFormatString: "MMMM",
-      type: "spline",
-      dataPoints: [
-        { x: new Date(2017, 0), y: 25060 },
-        { x: new Date(2017, 1), y: 27980 },
-        { x: new Date(2017, 2), y: 42800 },
-        { x: new Date(2017, 3), y: 32400 },
-        { x: new Date(2017, 4), y: 35260 },
-        { x: new Date(2017, 5), y: 33900 },
-        { x: new Date(2017, 6), y: 40000 },
-        { x: new Date(2017, 7), y: 52500 },
-        { x: new Date(2017, 8), y: 32300 },
-        { x: new Date(2017, 9), y: 42000 },
-        { x: new Date(2017, 10), y: 37160 },
-        { x: new Date(2017, 11), y: 38400 },
-      ],
-    },
-  ],
-};
 export default function Dashboard() {
   const [counts, setCounts] = useState(null);
+  const [activeUsersData, setActiveUsersData] = useState([]);
 
   const setCountData = async () => {
     try {
@@ -64,9 +32,72 @@ export default function Dashboard() {
       });
     }
   };
+
+  const options = {
+    animationEnabled: true,
+    title: {
+      text: "Active users",
+    },
+    axisX: {
+      title: "Users",
+    },
+    axisY: {
+      title: "Days",
+    },
+    data: [
+      {
+        type: "spline",
+        dataPoints: activeUsersData,
+      },
+    ],
+  };
+
+  const setActiveUsers = async () => {
+    try {
+      const res = await axios.get(
+        "http://62.72.0.179:5000/api/getActiveUsersCountByDay"
+      );
+      if (res.data.success) {
+        let tempData = res.data.data
+          .map((element) => {
+            const activeDate = new Date(element.active_date);
+
+            if (isNaN(activeDate)) {
+              // Handle the case where element.active_date is not a valid date string
+              console.error("Invalid date format:", element.active_date);
+              return null; // or handle the error in a way that suits your application
+            }
+
+            const timeDiff = new Date() - activeDate;
+
+            return {
+              y: Number(element.active_count),
+              x: Math.floor(timeDiff / (1000 * 60 * 60 * 24)),
+            };
+          })
+          .filter((dataPoint) => dataPoint !== null);
+        setActiveUsersData(tempData);
+      } else {
+        notification.error({
+          ...notificationConfig,
+          message: "Something went wrong",
+        });
+      }
+    } catch (error) {
+      notification.error({
+        ...notificationConfig,
+        message: "Something went wrong",
+      });
+    }
+  };
+
   useEffect(() => {
     setCountData();
   }, [counts]);
+
+  useEffect(() => {
+    setActiveUsers();
+  }, []);
 
   return (
     <AdminLayout header={"Dashboard"} searchBar={false}>
