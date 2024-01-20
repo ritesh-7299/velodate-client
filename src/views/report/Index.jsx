@@ -1,6 +1,14 @@
 import React, { useEffect, useState } from "react";
 import AdminLayout from "../../layouts/AdminLayout";
-import { Button, Flex, Pagination, Table, notification } from "antd";
+import {
+  Button,
+  Divider,
+  Flex,
+  Pagination,
+  Popover,
+  Table,
+  notification,
+} from "antd";
 import { Content, Footer } from "antd/es/layout/layout";
 import { FaSortAmountDown } from "react-icons/fa";
 import { CiFilter } from "react-icons/ci";
@@ -17,6 +25,31 @@ export default function Index() {
 
   const onChange = (page, pageSize) => {
     setCurrentPage(page);
+  };
+
+  const onSearch = async (data) => {
+    try {
+      setLoader(true);
+      const res = await axios.get(
+        "http://62.72.0.179:5000/api/searchInReports?term=" + data
+      );
+      if (res.data?.success) {
+        setData(res.data.data);
+        setPagination(res.data.pagination);
+      } else {
+        notification.error({
+          ...notificationConfig,
+          message: "Something went wrong",
+        });
+      }
+    } catch (error) {
+      notification.error({
+        ...notificationConfig,
+        message: "Something went wrong",
+      });
+    } finally {
+      setLoader(false);
+    }
   };
 
   const getData = async (page) => {
@@ -46,6 +79,33 @@ export default function Index() {
   useEffect(() => {
     getData(currentPage);
   }, [currentPage]);
+
+  const handleSort = async (type) => {
+    try {
+      setLoader(true);
+      let orderType = type === "nto" ? "new_to_old_users" : "old_to_new_users";
+
+      const res = await axios.get(
+        "http://62.72.0.179:5000/api/sortingInReports?order=" + orderType
+      );
+      if (res.data?.success) {
+        setData(res.data.data);
+        setPagination(res.data.pagination);
+      } else {
+        notification.error({
+          ...notificationConfig,
+          message: "Something went wrong",
+        });
+      }
+    } catch (error) {
+      notification.error({
+        ...notificationConfig,
+        message: "Something went wrong",
+      });
+    } finally {
+      setLoader(false);
+    }
+  };
 
   const changeStatus = async (status, id) => {
     try {
@@ -118,7 +178,7 @@ export default function Index() {
     },
   ];
   return (
-    <AdminLayout header={"Reports"}>
+    <AdminLayout header={"Reports"} onSearch={onSearch}>
       {loader && <Loader />}
       <Content
         style={{
@@ -147,7 +207,7 @@ export default function Index() {
             }}
           >
             <Flex justify="flex-end" gap={8}>
-              <CiFilter
+              {/* <CiFilter
                 style={{
                   height: 32,
                   width: 32,
@@ -155,16 +215,45 @@ export default function Index() {
                   color: "white",
                   border: "1px solid gray",
                 }}
-              />
-              <FaSortAmountDown
-                style={{
-                  height: 32,
-                  width: 32,
-                  padding: 5,
-                  color: "white",
-                  border: "1px solid gray",
-                }}
-              />
+              /> */}
+              <Popover
+                trigger="click"
+                className="cursor-pointer"
+                placement="bottom"
+                content={
+                  <div>
+                    <p>
+                      <Button
+                        type="link"
+                        onClick={() => handleSort("otn")}
+                        className="text-black "
+                      >
+                        old to new
+                      </Button>
+                    </p>
+                    <Divider />
+                    <p>
+                      <Button
+                        type="link"
+                        onClick={() => handleSort("nto")}
+                        className="text-black "
+                      >
+                        new to old
+                      </Button>
+                    </p>
+                  </div>
+                }
+              >
+                <FaSortAmountDown
+                  style={{
+                    height: 32,
+                    width: 32,
+                    padding: 5,
+                    color: "white",
+                    border: "1px solid gray",
+                  }}
+                />
+              </Popover>
             </Flex>
           </div>
         </Flex>
