@@ -69,7 +69,7 @@ export default function Dashboard() {
   }, [counts]);
 
   return (
-    <AdminLayout header={"Dashboard"}>
+    <AdminLayout header={"Dashboard"} searchBar={false}>
       <Content
         style={{
           background: "#000",

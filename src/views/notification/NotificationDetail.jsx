@@ -72,7 +72,7 @@ export default function NotificationDetail() {
   }, []);
 
   return (
-    <AdminLayout header={"Push Notification"}>
+    <AdminLayout searchBar={false} header={"Push Notification"}>
       {data ? (
         <>
           <Content

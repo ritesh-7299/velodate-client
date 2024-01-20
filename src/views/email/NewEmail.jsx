@@ -101,7 +101,7 @@ export default function NewEmail() {
   };
 
   return (
-    <AdminLayout header={"Push Email"}>
+    <AdminLayout searchBar={false} header={"Push Email"}>
       <Content
         style={{
           background: "#000",

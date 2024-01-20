@@ -18,6 +18,7 @@ import chevronUp from "../../assets/chevronUp.svg";
 import AdminLayout from "../../layouts/AdminLayout";
 import { Content, Footer } from "antd/es/layout/layout";
 import { FaPlus } from "react-icons/fa6";
+import defaultProfile from "../../assets/defaultProfile.png";
 
 const getBase64 = (file) =>
   new Promise((resolve, reject) => {
@@ -119,7 +120,7 @@ export default function UserDetail() {
   }, []);
 
   return (
-    <AdminLayout header={"User details"}>
+    <AdminLayout header={"User details"} searchBar={false}>
       {data ? (
         <>
           <Content
@@ -145,7 +146,11 @@ export default function UserDetail() {
                   </Link>
                   <img
                     className="rounded-full w-14 h-14"
-                    src={"http://62.72.0.179:5000/" + data.profile_img}
+                    src={
+                      data.profile_img
+                        ? "http://62.72.0.179:5000/" + data.profile_img
+                        : defaultProfile
+                    }
                     alt="profile"
                   />
                 </Flex>
@@ -282,14 +287,12 @@ export default function UserDetail() {
                 Images
                 <Upload
                   className="mt-4 mb-4"
-                  action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
                   listType="picture-card"
                   fileList={fileList}
                   onPreview={handlePreview}
+                  showUploadList={{ showRemoveIcon: false }}
                   onChange={handleChange}
-                >
-                  {fileList.length >= 8 ? null : uploadButton}
-                </Upload>
+                ></Upload>
                 <Modal
                   open={previewOpen}
                   title={previewTitle}
@@ -297,7 +300,7 @@ export default function UserDetail() {
                   onCancel={handleCancel}
                 >
                   <img
-                    alt="example"
+                    alt="preview"
                     style={{
                       width: "100%",
                     }}

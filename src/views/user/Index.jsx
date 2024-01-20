@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import AdminLayout from "../../layouts/AdminLayout";
 import {
+  Badge,
   Button,
   Checkbox,
   Divider,
@@ -60,10 +61,11 @@ const columns = [
 
 export default function Index() {
   const [data, setData] = useState(null);
-  // const [filter, setFilter] = useState(null);
+  const [filter, setFilter] = useState(null);
   const [pagination, setPagination] = useState(null);
   const [loader, setLoader] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [showBadge, setShowBadge] = useState(false);
 
   const onChange = (page, pageSize) => {
     setCurrentPage(page);
@@ -94,14 +96,47 @@ export default function Index() {
     }
   };
 
+  function areAllValuesEmpty(obj) {
+    return obj ? Object.values(obj).every((value) => !value) : true;
+  }
+
   const changeFilter = async (e) => {
     try {
       setLoader(true);
       let filterData = {};
       filterData[e.target.name] = e.target.checked ? e.target.value : "";
+      setFilter({ ...filter, ...filterData });
+
       const res = await axios.post(
         "http://62.72.0.179:5000/api/filterUsers",
         filterData
+      );
+      if (res.data?.success) {
+        setData(res.data.data);
+        setPagination(res.data.pagination);
+      } else {
+        notification.error({
+          ...notificationConfig,
+          message: "Something went wrong",
+        });
+      }
+    } catch (error) {
+      notification.error({
+        ...notificationConfig,
+        message: "Something went wrong",
+      });
+    } finally {
+      setLoader(false);
+    }
+  };
+
+  const handleSort = async (type) => {
+    try {
+      setLoader(true);
+      let orderType = type === "nto" ? "new_to_old_users" : "old_to_new_users";
+
+      const res = await axios.get(
+        "http://62.72.0.179:5000/api/sortingUsers?order=" + orderType
       );
       if (res.data?.success) {
         setData(res.data.data);
@@ -150,6 +185,10 @@ export default function Index() {
   useEffect(() => {
     getData(currentPage);
   }, [currentPage]);
+
+  useEffect(() => {
+    areAllValuesEmpty(filter) ? setShowBadge(false) : setShowBadge(true);
+  }, [filter]);
 
   return (
     <AdminLayout header={"Users"} onSearch={onSearch}>
@@ -228,7 +267,47 @@ export default function Index() {
                 trigger="click"
                 className="cursor-pointer"
               >
-                <CiFilter
+                <Badge dot={showBadge}>
+                  <CiFilter
+                    style={{
+                      height: 32,
+                      width: 32,
+                      padding: 5,
+                      color: "white",
+                      border: "1px solid gray",
+                    }}
+                  />
+                </Badge>
+              </Popover>
+              <Popover
+                trigger="click"
+                className="cursor-pointer"
+                placement="bottom"
+                content={
+                  <div>
+                    <p>
+                      <Button
+                        type="link"
+                        onClick={() => handleSort("otn")}
+                        className="text-black "
+                      >
+                        old to new
+                      </Button>
+                    </p>
+                    <Divider />
+                    <p>
+                      <Button
+                        type="link"
+                        onClick={() => handleSort("nto")}
+                        className="text-black "
+                      >
+                        new to old
+                      </Button>
+                    </p>
+                  </div>
+                }
+              >
+                <FaSortAmountDown
                   style={{
                     height: 32,
                     width: 32,
@@ -238,31 +317,16 @@ export default function Index() {
                   }}
                 />
               </Popover>
-              <FaSortAmountDown
-                style={{
-                  height: 32,
-                  width: 32,
-                  padding: 5,
-                  color: "white",
-                  border: "1px solid gray",
-                }}
-              />
             </Flex>
           </div>
         </Flex>
         <div>
           <Table
-            // rowSelection={{
-            //   ...rowSelection,
-            // }}
             style={{
               marginLeft: 24,
               marginRight: 74,
             }}
-            // rowClassName={"bg-black text-gray-300 m-1 border-1 "}
             sticky
-            // scroll={{ y: "calc(100vh - 100px)" }}
-            // height="300"
             responsive
             pagination={false}
             columns={columns}
@@ -275,7 +339,6 @@ export default function Index() {
         style={{
           textAlign: "center",
           background: "#000",
-          //   background: "white",
           color: "white",
         }}
       >

@@ -38,10 +38,9 @@ const validationSchema = Yup.object({
 
 export default function Index() {
   const user = useSelector((state) => state.user);
-  const userId = user.id ? user.id : 11;
-  const userName = user.name ? user.name : "Ritesh Macwan";
+  const userName = user.name ? user.name : "";
   const [data, setData] = useState(null);
-  const [dob, setDOB] = useState(null);
+  const [dob, setDOB] = useState("2024/01/16");
   const [gender, setGender] = useState(null);
   const [loader, setLoader] = useState(false);
   const styles = {
@@ -62,14 +61,17 @@ export default function Index() {
   const dateFormat = "YYYY/MM/DD";
 
   const handleChange = (date, dateString) => {
+    console.log("🚀 ~ handleChange ~ date:", date);
+    console.log("🚀 ~ handleChange ~ dateString:", typeof dateString);
     setDOB(dateString);
   };
 
   let initialValues = {
+    id: data?.id ? data?.id : null,
     fullname: data?.fullname ? data.fullname : "",
     email: data?.email ? data.email : "",
     contact: data?.contact ? data.contact : "",
-    dob: data?.birthDate ? dayjs(data.birthDate, dateFormat) : "",
+    dob: data?.dob ? data?.dob?.split("T")[0].replace(/-/g, "/") : "",
     gender: data?.gender ? data.gender : "",
   };
 
@@ -80,43 +82,18 @@ export default function Index() {
     if (gender) {
       values["gender"] = gender;
     }
-    alert("profile update api integration is remaining");
-    return;
     setLoader(true);
     try {
-      const res = await axios.post(
-        "http://62.72.0.179:5000/auth/login",
+      const res = await axios.put(
+        "http://62.72.0.179:5000/api/updateAdmin",
         values
       );
-      if (res.data.token) {
-        localStorage.setItem("_token", res.data.token);
-        // navigate("/dashboard");
-      } else {
-        notification.error({
+      if (res.data?.success) {
+        setData(res.data.object[0]);
+        notification.success({
           ...notificationConfig,
-          message: "Invalid credentials",
-          description: "Please check email/contact number and password",
+          message: "Profile data updated successfully",
         });
-      }
-    } catch (error) {
-      error.response?.data?.message === "Unauthorized"
-        ? notification.error({
-            ...notificationConfig,
-            message: "Invalid credentials",
-            description: "Please check email/contact number and password",
-          })
-        : alert("something went wrong");
-    } finally {
-      setLoader(false);
-    }
-  };
-
-  const fetchData = async () => {
-    try {
-      const res = await axios.get(`http://62.72.0.179:5000/auth/getUser`);
-      console.log("🚀 ~ fetchData ~ res:", res);
-      if (res.data.success) {
-        setData(res.data.user);
       } else {
         notification.error({
           ...notificationConfig,
@@ -129,6 +106,36 @@ export default function Index() {
         message: "Something went wrong",
       });
     } finally {
+      setLoader(false);
+    }
+  };
+
+  const fetchData = async () => {
+    try {
+      const res = await axios.get(`http://62.72.0.179:5000/auth/getUser`);
+      console.log("🚀 ~ fetchData ~ res:", res);
+      if (res.data.success) {
+        setData(res.data?.user);
+        setGender(res.data.user?.gender);
+        setDOB(
+          res.data.user?.dob
+            ? res.data.user?.dob?.split("T")[0].replace(/-/g, "/")
+            : null
+        );
+      } else {
+        notification.error({
+          ...notificationConfig,
+          message: "Something went wrong",
+        });
+      }
+    } catch (error) {
+      console.log("🚀 ~ fetchData ~ error:", error);
+
+      notification.error({
+        ...notificationConfig,
+        message: "Something went wrong",
+      });
+    } finally {
     }
   };
   useEffect(() => {
@@ -136,7 +143,8 @@ export default function Index() {
   }, []);
 
   return (
-    <AdminLayout header={userName}>
+    <AdminLayout header={userName} searchBar={false}>
+      {loader && <Loader />}
       {data ? (
         <>
           <Content
@@ -330,13 +338,14 @@ export default function Index() {
                       className="mt-6"
                     >
                       <Field
-                        name="birtDate"
+                        name="dob1"
                         render={({ field }) => (
                           <DatePicker
                             {...field}
                             disabledDate={(currentDate) =>
                               currentDate && currentDate > dayjs()
                             }
+                            defaultValue={dayjs(dob, dateFormat)}
                             onChange={handleChange}
                             style={{
                               width: 320,
@@ -348,7 +357,7 @@ export default function Index() {
                       />
                       <ErrorMessage
                         className="text-gray-300 text-xs"
-                        name="birthDate"
+                        name="dob"
                         component="div"
                       />
                     </Col>

@@ -27,7 +27,7 @@ const items = [
   label: `nav ${index + 1}`,
 }));
 
-const AdminLayout = ({ children, header, onSearch }) => {
+const AdminLayout = ({ children, header, searchBar = true, onSearch }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const username = useSelector((state) => state.user.name);
@@ -168,7 +168,7 @@ const AdminLayout = ({ children, header, onSearch }) => {
               {header}
             </div>
             <Flex>
-              {header != "Dashboard" && (
+              {searchBar && (
                 <Search
                   placeholder="Search here..."
                   allowClear

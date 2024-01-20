@@ -73,7 +73,7 @@ export default function NewNotification() {
   };
 
   return (
-    <AdminLayout header={"Push Notification"}>
+    <AdminLayout searchBar={false} header={"Push Notification"}>
       {loader && <Loader />}
       <Content
         style={{
