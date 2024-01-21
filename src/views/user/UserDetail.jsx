@@ -179,7 +179,7 @@ export default function UserDetail() {
                   </p>
                 </Flex>
               </Flex>
-              <Flex>
+              {/* <Flex>
                 <Button
                   style={{
                     borderRadius: 20,
@@ -200,7 +200,7 @@ export default function UserDetail() {
                 >
                   Save changes
                 </Button>
-              </Flex>
+              </Flex> */}
             </Flex>
             <div
               style={{

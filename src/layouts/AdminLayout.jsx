@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Flex, Layout, Menu, Modal } from "antd";
+import { Flex, Layout, Menu, Modal, Popover } from "antd";
 import logoIcon from "../assets/icons/logoIcon.svg";
 import { Link, useNavigate } from "react-router-dom";
 import { RxDashboard } from "react-icons/rx";
@@ -200,7 +200,23 @@ const AdminLayout = ({ children, header, searchBar = true, onSearch }) => {
                   color: "var(--Text-T1, #F6F6F6)",
                 }}
               >
-                <Link to={"/profile"}>{username ? username : ""}</Link>
+                <Popover
+                  trigger="click"
+                  className="cursor-pointer"
+                  content={
+                    <div>
+                      <p>
+                        <Link to={"/profile"}>View Profile</Link>
+                      </p>
+                      <hr></hr>
+                      <p className="cursor-pointer" onClick={showLogoutModal}>
+                        Logout
+                      </p>
+                    </div>
+                  }
+                >
+                  {username ? username : ""}
+                </Popover>
               </p>
               <IoMdNotificationsOutline
                 className="user"

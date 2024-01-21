@@ -1,4 +1,4 @@
-import { Col, Flex, Row, notification, theme } from "antd";
+import { Col, Flex, Row, notification } from "antd";
 import React, { useEffect, useState } from "react";
 import AdminLayout from "../../layouts/AdminLayout";
 import { Content } from "antd/es/layout/layout";
@@ -13,6 +13,7 @@ var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 export default function Dashboard() {
   const [counts, setCounts] = useState(null);
   const [activeUsersData, setActiveUsersData] = useState([]);
+  const [visitorsData, setVisitorsData] = useState([]);
 
   const setCountData = async () => {
     try {
@@ -33,21 +34,48 @@ export default function Dashboard() {
     }
   };
 
-  const options = {
+  const optionsForActiveUsers = {
     animationEnabled: true,
+    backgroundColor: "#3D3B35",
+    toolTip: {
+      content: "<h1>Active Users</h1><center><b>{y}</b></center>",
+    },
     title: {
       text: "Active users",
     },
     axisX: {
-      title: "Users",
+      title: "Days",
     },
     axisY: {
-      title: "Days",
+      title: "Users",
     },
     data: [
       {
         type: "spline",
         dataPoints: activeUsersData,
+      },
+    ],
+  };
+
+  const optionsForVisitors = {
+    animationEnabled: true,
+    backgroundColor: "#3D3B35",
+    toolTip: {
+      content: "<h1>Visitors</h1><center><b>{y}</b></center>",
+    },
+    title: {
+      text: "Visitors",
+    },
+    axisX: {
+      title: "Days",
+    },
+    axisY: {
+      title: "Users",
+    },
+    data: [
+      {
+        type: "spline",
+        dataPoints: visitorsData,
       },
     ],
   };
@@ -69,14 +97,52 @@ export default function Dashboard() {
             }
 
             const timeDiff = new Date() - activeDate;
-
+            if (Math.floor(timeDiff / (1000 * 60 * 60 * 24)) > 100) return null;
             return {
-              y: Number(element.active_count),
               x: Math.floor(timeDiff / (1000 * 60 * 60 * 24)),
+              y: Number(element.active_count),
             };
           })
           .filter((dataPoint) => dataPoint !== null);
+
         setActiveUsersData(tempData);
+      } else {
+        notification.error({
+          ...notificationConfig,
+          message: "Something went wrong",
+        });
+      }
+    } catch (error) {
+      notification.error({
+        ...notificationConfig,
+        message: "Something went wrong",
+      });
+    }
+  };
+
+  const setVisitors = async () => {
+    try {
+      const res = await axios.get("http://62.72.0.179:5000/api/getVisitors");
+      if (res.data.success) {
+        let tempData = res.data.data
+          .map((element) => {
+            const activeDate = new Date(element.visit_date);
+
+            if (isNaN(activeDate)) {
+              // Handle the case where element.active_date is not a valid date string
+              console.error("Invalid date format:", element.active_date);
+              return null; // or handle the error in a way that suits your application
+            }
+
+            const timeDiff = new Date() - activeDate;
+            if (Math.floor(timeDiff / (1000 * 60 * 60 * 24)) > 100) return null;
+            return {
+              x: Math.floor(timeDiff / (1000 * 60 * 60 * 24)),
+              y: Number(element.visitor_count),
+            };
+          })
+          .filter((dataPoint) => dataPoint !== null);
+        setVisitorsData(tempData);
       } else {
         notification.error({
           ...notificationConfig,
@@ -97,6 +163,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     setActiveUsers();
+    setVisitors();
   }, []);
 
   return (
@@ -198,10 +265,10 @@ export default function Dashboard() {
 
         <Row justify={"space-evenly"} className="mt-10 mb-8 h-auto">
           <Col style={{ backgroundColor: "#3D3B35" }} span={10}>
-            <CanvasJSChart options={options} />
+            <CanvasJSChart options={optionsForActiveUsers} />
           </Col>
           <Col style={{ backgroundColor: "#3D3B35" }} span={10}>
-            <CanvasJSChart options={options} />
+            <CanvasJSChart options={optionsForVisitors} />
           </Col>
         </Row>
       </Content>

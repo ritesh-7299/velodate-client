@@ -4,6 +4,7 @@ import {
   Button,
   Divider,
   Flex,
+  Modal,
   Pagination,
   Popover,
   Table,
@@ -22,6 +23,16 @@ export default function Index() {
   const [pagination, setPagination] = useState(null);
   const [loader, setLoader] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOk = async () => {
+    setIsModalOpen(false);
+    changeStatus(isModalOpen?.status, isModalOpen?.id);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
 
   const onChange = (page, pageSize) => {
     setCurrentPage(page);
@@ -162,14 +173,18 @@ export default function Index() {
       render: (text, record) =>
         text != "active" ? (
           <Button
-            onClick={() => changeStatus("active", record.report_id)}
+            onClick={() =>
+              setIsModalOpen({ status: "active", id: record.report_id })
+            }
             style={{ borderColor: "green", color: "gray" }}
           >
             Resolved
           </Button>
         ) : (
           <Button
-            onClick={() => changeStatus("resolved", record.report_id)}
+            onClick={() =>
+              setIsModalOpen({ status: "resolved", id: record.report_id })
+            }
             style={{ borderColor: "red", color: "gray" }}
           >
             Active
@@ -180,6 +195,17 @@ export default function Index() {
   return (
     <AdminLayout header={"Reports"} onSearch={onSearch}>
       {loader && <Loader />}
+      <Modal
+        title={"Report"}
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        okButtonProps={{
+          background: "black",
+        }}
+      >
+        <p>{`Are you sure want to ${isModalOpen?.status} this report?`}</p>
+      </Modal>
       <Content
         style={{
           background: "#000",

@@ -1,4 +1,4 @@
-import { Button, Col, Flex, Row, notification } from "antd";
+import { Button, Col, Flex, Modal, Row, notification } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -52,6 +52,46 @@ export default function EmailDetail() {
       setLoader(false);
     }
   };
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const showLogoutModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleOk = async () => {
+    try {
+      setIsModalOpen(false);
+      setLoader(true);
+      const res = await axios.post(
+        "http://62.72.0.179:5000/api/email/sendEmail",
+        data
+      );
+      if (res.data.success) {
+        notification.success({
+          ...notificationConfig,
+          message: "Email has been sent successfully",
+        });
+      } else {
+        notification.error({
+          ...notificationConfig,
+          message: "Something went wrong",
+        });
+      }
+    } catch (error) {
+      notification.error({
+        ...notificationConfig,
+        message: "Something went wrong",
+      });
+    } finally {
+      setLoader(false);
+    }
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -59,6 +99,18 @@ export default function EmailDetail() {
   return (
     <AdminLayout header={"Push Email"}>
       {loader && <Loader />}
+      <Modal
+        title="Resend"
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        okButtonProps={{
+          background: "black",
+        }}
+      >
+        <p>Are you sure want to resend this email?</p>
+        <p className="text-xs">This action is non-revisable.</p>
+      </Modal>
       {data ? (
         <>
           <Content
@@ -97,6 +149,7 @@ export default function EmailDetail() {
                   Delete
                 </Button>
                 <Button
+                  onClick={showLogoutModal}
                   style={{
                     borderRadius: 20,
                     color: "white",
