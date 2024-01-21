@@ -8,6 +8,7 @@ import { Content, Footer } from "antd/es/layout/layout";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import TextArea from "antd/es/input/TextArea";
+import { useNavigate } from "react-router-dom";
 
 const validationSchema = Yup.object({
   title: Yup.string().required("Title is required"),
@@ -21,6 +22,7 @@ const initialValues = {
 };
 
 export default function NewNotification() {
+  const navigate = useNavigate();
   const [userType, setUserType] = useState("all_users");
   const [loader, setLoader] = useState(false);
   const handleChange = (value) => {
@@ -56,6 +58,7 @@ export default function NewNotification() {
           ...notificationConfig,
           message: "Notification has been sent successfully",
         });
+        navigate("/notifications");
       } else {
         notification.error({
           ...notificationConfig,

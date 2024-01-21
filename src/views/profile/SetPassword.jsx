@@ -7,6 +7,7 @@ import { Content, Footer } from "antd/es/layout/layout";
 import { useSelector } from "react-redux";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { useState } from "react";
 
 const validationSchema = Yup.object({
   password: Yup.string()
@@ -27,6 +28,7 @@ const validationSchema = Yup.object({
 });
 
 export default function SetPassword() {
+  const [loader, setLoader] = useState(false);
   const user = useSelector((state) => state.user);
   const userName = user.name ? user.name : "Ritesh Macwan";
   const styles = {
@@ -50,39 +52,43 @@ export default function SetPassword() {
     confirm_password: "",
   };
 
-  const onSubmit = async (values) => {
-    alert("Reset password api integration is remaining");
-    return;
-
+  const onSubmit = async (values, { resetForm }) => {
     try {
+      setLoader(true);
       const res = await axios.post(
-        "http://62.72.0.179:5000/auth/login",
+        "http://62.72.0.179:5000/auth/reset-password-admin",
         values
       );
-      if (res.data.token) {
-        localStorage.setItem("_token", res.data.token);
-        // navigate("/dashboard");
+      if (res.data.success) {
+        resetForm();
+        notification.success({
+          ...notificationConfig,
+          message: "Password reset successfully",
+        });
       } else {
         notification.error({
           ...notificationConfig,
-          message: "Invalid credentials",
-          description: "Please check email/contact number and password",
+          message: "Something went wrong",
         });
       }
     } catch (error) {
       error.response?.data?.message === "Unauthorized"
         ? notification.error({
             ...notificationConfig,
-            message: "Invalid credentials",
-            description: "Please check email/contact number and password",
+            message: "Invalid password",
           })
-        : alert("something went wrong");
+        : notification.error({
+            ...notificationConfig,
+            message: "Something went wrong",
+          });
     } finally {
+      setLoader(false);
     }
   };
 
   return (
     <AdminLayout header={userName}>
+      {loader && <Loader />}
       <Content
         style={{
           background: "#000",

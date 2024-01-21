@@ -1,7 +1,7 @@
 import { Button, Col, Flex, Modal, Row, notification } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Loader from "../../components/Loader";
 import { notificationConfig } from "../../config/NotificationConfig";
 import AdminLayout from "../../layouts/AdminLayout";
@@ -9,9 +9,11 @@ import { Content, Footer } from "antd/es/layout/layout";
 import { RiAttachment2 } from "react-icons/ri";
 
 export default function EmailDetail() {
+  const navigate = useNavigate();
   const { emailId } = useParams();
   const [data, setData] = useState(null);
   const [loader, setLoader] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const styles = {
     headingStyle: {
@@ -53,25 +55,40 @@ export default function EmailDetail() {
     }
   };
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const showResendModal = () => {
+    setIsModalOpen("resend");
+  };
 
-  const showLogoutModal = () => {
-    setIsModalOpen(true);
+  const showDeleteModal = () => {
+    setIsModalOpen("delete");
   };
 
   const handleOk = async () => {
     try {
-      setIsModalOpen(false);
       setLoader(true);
-      const res = await axios.post(
-        "http://62.72.0.179:5000/api/email/sendEmail",
-        data
-      );
+      let type = isModalOpen;
+      setIsModalOpen(false);
+      let res = {};
+      let message = "";
+      if (type == "resend") {
+        res = await axios.post(
+          "http://62.72.0.179:5000/api/email/sendEmail",
+          data
+        );
+        message = "Email has been sent successfully";
+      } else {
+        res = await axios.delete(
+          "http://62.72.0.179:5000/api/email/" + data.id
+        );
+        message = "Email has been deleted successfully";
+      }
+
       if (res.data.success) {
         notification.success({
           ...notificationConfig,
-          message: "Email has been sent successfully",
+          message: message,
         });
+        navigate("/emails");
       } else {
         notification.error({
           ...notificationConfig,
@@ -100,8 +117,8 @@ export default function EmailDetail() {
     <AdminLayout header={"Push Email"}>
       {loader && <Loader />}
       <Modal
-        title="Resend"
-        open={isModalOpen}
+        title="Resend email"
+        open={isModalOpen == "resend"}
         onOk={handleOk}
         onCancel={handleCancel}
         okButtonProps={{
@@ -109,6 +126,18 @@ export default function EmailDetail() {
         }}
       >
         <p>Are you sure want to resend this email?</p>
+        <p className="text-xs">This action is non-revisable.</p>
+      </Modal>
+      <Modal
+        title="Delete email"
+        open={isModalOpen == "delete"}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        okButtonProps={{
+          background: "black",
+        }}
+      >
+        <p>Are you sure want to delete this email?</p>
         <p className="text-xs">This action is non-revisable.</p>
       </Modal>
       {data ? (
@@ -145,11 +174,12 @@ export default function EmailDetail() {
                     marginRight: 16,
                     marginTop: 8,
                   }}
+                  onClick={showDeleteModal}
                 >
                   Delete
                 </Button>
                 <Button
-                  onClick={showLogoutModal}
+                  onClick={showResendModal}
                   style={{
                     borderRadius: 20,
                     color: "white",

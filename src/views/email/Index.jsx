@@ -111,7 +111,7 @@ export default function Index() {
                   }}
                 />
               </Link>
-              <CiFilter
+              {/* <CiFilter
                 style={{
                   height: 32,
                   width: 32,
@@ -128,7 +128,7 @@ export default function Index() {
                   color: "white",
                   border: "1px solid gray",
                 }}
-              />
+              /> */}
             </Flex>
           </div>
         </Flex>

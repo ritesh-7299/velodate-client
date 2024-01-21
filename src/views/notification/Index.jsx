@@ -102,15 +102,15 @@ export default function Index() {
                 <FaPlus
                   style={{
                     height: 32,
-                  width: 32,
-                  padding:5,
+                    width: 32,
+                    padding: 5,
                     color: "white",
                     cursor: "pointer",
                     border: "1px solid gray",
                   }}
                 />
               </Link>
-              <CiFilter
+              {/* <CiFilter
                 style={{
                   height: 32,
                   width: 32,
@@ -127,7 +127,7 @@ export default function Index() {
                   color: "white",
                   border: "1px solid gray",
                 }}
-              />
+              /> */}
             </Flex>
           </div>
         </Flex>

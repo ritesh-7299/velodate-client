@@ -33,6 +33,7 @@ const initialValues = {
 export default function NewEmail() {
   let navigate = useNavigate();
   const [userType, setUserType] = useState("all_users");
+  const [attachment, setAttachment] = useState(null);
   const handleChange = (value) => {
     setUserType(value);
   };
@@ -51,22 +52,48 @@ export default function NewEmail() {
     },
   };
 
+  const uploadFileToServer = async (fileData) => {
+    const formData = new FormData();
+    formData.append("image", fileData);
+    try {
+      const res = await axios.post(
+        "http://62.72.0.179:5000/attachment",
+        formData,
+        {
+          "Content-Type": "multipart/form-data",
+        }
+      );
+
+      if (res.data.success) {
+        setAttachment(res.data.file);
+        notification.success({
+          ...notificationConfig,
+          message: "File uploaded",
+        });
+      } else {
+        notification.error({
+          ...notificationConfig,
+          message: "File not uploaded",
+        });
+      }
+    } catch (error) {}
+  };
+
   const props = {
     name: "file",
     action: "https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188",
     headers: {
       authorization: "authorization-text",
     },
+
     onChange(info) {
-      if (info.file.status !== "uploading") {
-        console.log(info.file, info.fileList);
-      }
       if (info.file.status === "done") {
-        // message.success();
-        alert(`${info.file.name} file uploaded successfully`);
+        uploadFileToServer(info.file.originFileObj);
       } else if (info.file.status === "error") {
-        // message.error();
-        alert(`${info.file.name} file upload failed.`);
+        notification.error({
+          ...notificationConfig,
+          message: `${info.file.name} file upload failed.`,
+        });
       }
     },
   };
@@ -75,6 +102,10 @@ export default function NewEmail() {
     if (userType) {
       values["target_to"] = userType;
     }
+    if (attachment) {
+      values["attachment"] = attachment;
+    }
+    console.log("🚀 ~ onSubmit ~ values:", values);
     try {
       const res = await axios.post(
         "http://62.72.0.179:5000/api/email/sendEmail",
@@ -265,7 +296,7 @@ export default function NewEmail() {
                     id="file"
                     name="file"
                     render={({ field }) => (
-                      <Upload {...props} className="text-white">
+                      <Upload {...props} maxCount={1} className="text-white">
                         <Button className="text-white">Click to Upload</Button>
                       </Upload>
                     )}

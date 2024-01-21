@@ -1,34 +1,18 @@
-import {
-  Button,
-  Col,
-  Divider,
-  Flex,
-  Modal,
-  Row,
-  Switch,
-  Upload,
-  notification,
-} from "antd";
+import { Button, Col, Flex, Modal, Row, notification } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Loader from "../../components/Loader";
 import { notificationConfig } from "../../config/NotificationConfig";
-import chevronUp from "../../assets/chevronUp.svg";
 import AdminLayout from "../../layouts/AdminLayout";
 import { Content, Footer } from "antd/es/layout/layout";
-import { FaPlus } from "react-icons/fa6";
-
-const demoData = {
-  date: "25/5/2023",
-  user_type: "New users",
-  subject: "New Function",
-  body: "Lorem ipsum dolor sit amet consectetur. Viverra volutpat aliquam at fames ac enim.",
-};
 
 export default function NotificationDetail() {
+  const navigate = useNavigate();
   const { notificationId } = useParams();
   const [data, setData] = useState(null);
+  const [loader, setLoader] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const styles = {
     headingStyle: {
@@ -47,32 +31,114 @@ export default function NotificationDetail() {
 
   const fetchData = async () => {
     try {
-      setData(demoData);
-      //   const res = await axios.get(
-      //     `http://62.72.0.179:5000/api/users/${userId}`
-      //   );
-      //   if (res.data.success) {
-      //     setData(res.data.object);
-      //   } else {
-      //     notification.error({
-      //       ...notificationConfig,
-      //       message: "Something went wrong",
-      //     });
-      //   }
+      setLoader(true);
+      const res = await axios.get(
+        `http://62.72.0.179:5000/api/notifications/${notificationId}`
+      );
+      if (res.data.success) {
+        setData(res.data.object[0]);
+      } else {
+        notification.error({
+          ...notificationConfig,
+          message: "Something went wrong",
+        });
+      }
     } catch (error) {
       notification.error({
         ...notificationConfig,
         message: "Something went wrong",
       });
     } finally {
+      setLoader(false);
     }
   };
+
+  const showResendModal = () => {
+    setIsModalOpen("resend");
+  };
+
+  const showDeleteModal = () => {
+    setIsModalOpen("delete");
+  };
+
+  const handleOk = async () => {
+    try {
+      setLoader(true);
+      let type = isModalOpen;
+      setIsModalOpen(false);
+      let res = {};
+      let message = "";
+      if (type == "resend") {
+        delete data.data;
+        res = await axios.post(
+          "http://62.72.0.179:5000/api/notifications/send",
+          { data }
+        );
+        message = "Notification has been sent successfully";
+      } else {
+        res = await axios.delete(
+          "http://62.72.0.179:5000/api/notifications/" + data.id
+        );
+        message = "Notification has been deleted successfully";
+      }
+
+      if (res.data.success) {
+        setLoader(false);
+        notification.success({
+          ...notificationConfig,
+          message: message,
+        });
+        navigate("/notifications");
+      } else {
+        notification.error({
+          ...notificationConfig,
+          message: "Something went wrong",
+        });
+      }
+    } catch (error) {
+      notification.error({
+        ...notificationConfig,
+        message: "Something went wrong",
+      });
+    } finally {
+      setLoader(false);
+    }
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
   useEffect(() => {
     fetchData();
   }, []);
 
   return (
     <AdminLayout searchBar={false} header={"Push Notification"}>
+      <Modal
+        title="Resend notification"
+        open={isModalOpen == "resend"}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        okButtonProps={{
+          background: "black",
+        }}
+      >
+        <p>Are you sure want to resend this notification?</p>
+        <p className="text-xs">This action is non-revisable.</p>
+      </Modal>
+      <Modal
+        title="Delete"
+        open={isModalOpen == "delete"}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        okButtonProps={{
+          background: "black",
+        }}
+      >
+        <p>Are you sure want to delete this notification?</p>
+        <p className="text-xs">This action is non-revisable.</p>
+      </Modal>
       {data ? (
         <>
           <Content
@@ -107,6 +173,7 @@ export default function NotificationDetail() {
                     marginRight: 16,
                     marginTop: 8,
                   }}
+                  onClick={showDeleteModal}
                 >
                   Delete
                 </Button>
@@ -117,6 +184,7 @@ export default function NotificationDetail() {
                     marginRight: 16,
                     marginTop: 8,
                   }}
+                  onClick={showResendModal}
                 >
                   Resend
                 </Button>
@@ -155,7 +223,7 @@ export default function NotificationDetail() {
                   span={20}
                   className="mt-4"
                 >
-                  {data?.user_type ? data.user_type : "-"}
+                  {data?.target_to ? data.target_to : "-"}
                 </Col>
                 <Col
                   style={{ ...styles.headingStyle }}
@@ -169,7 +237,7 @@ export default function NotificationDetail() {
                   span={20}
                   className="mt-4"
                 >
-                  {data?.subject ? data.subject : "-"}
+                  {data?.title ? data.title : "-"}
                 </Col>
                 <Col
                   style={{ ...styles.headingStyle }}
@@ -183,7 +251,7 @@ export default function NotificationDetail() {
                   span={20}
                   className="mt-4"
                 >
-                  {data?.body ? data.body : "-"}
+                  {data?.message ? data.message : "-"}
                 </Col>
               </Row>
             </div>
