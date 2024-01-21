@@ -66,9 +66,6 @@ export default function Signin() {
       setLoader(false);
     }
   };
-  const onChange = (e) => {
-    console.log(`checked = ${e.target.checked}`);
-  };
   return (
     <div className="grid grid-cols-2 h-screen">
       {loader && <Loader />}
@@ -180,7 +177,7 @@ export default function Signin() {
                     style={{ alignItems: "center", display: "flex" }}
                     className="flex"
                   >
-                    <Checkbox onChange={onChange}>
+                    <Checkbox>
                       <Typography.Title
                         level={8}
                         style={{

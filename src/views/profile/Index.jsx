@@ -61,8 +61,6 @@ export default function Index() {
   const dateFormat = "YYYY/MM/DD";
 
   const handleChange = (date, dateString) => {
-    console.log("🚀 ~ handleChange ~ date:", date);
-    console.log("🚀 ~ handleChange ~ dateString:", typeof dateString);
     setDOB(dateString);
   };
 
@@ -113,7 +111,6 @@ export default function Index() {
   const fetchData = async () => {
     try {
       const res = await axios.get(`http://62.72.0.179:5000/auth/getUser`);
-      console.log("🚀 ~ fetchData ~ res:", res);
       if (res.data.success) {
         setData(res.data?.user);
         setGender(res.data.user?.gender);
@@ -129,8 +126,6 @@ export default function Index() {
         });
       }
     } catch (error) {
-      console.log("🚀 ~ fetchData ~ error:", error);
-
       notification.error({
         ...notificationConfig,
         message: "Something went wrong",

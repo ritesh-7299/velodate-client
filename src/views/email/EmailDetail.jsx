@@ -36,7 +36,6 @@ export default function EmailDetail() {
       const res = await axios.get(
         `http://62.72.0.179:5000/api/email/getEmailById/${emailId}`
       );
-      console.log("🚀 ~ fetchData ~ res:", res);
       if (res.data.success) {
         setData(res.data.object[0]);
       } else {

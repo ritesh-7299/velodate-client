@@ -94,6 +94,35 @@ export default function UserDetail() {
     },
   };
 
+  const changeNotificationChange = async (checked, event, payloadData) => {
+    try {
+      let data = {};
+      data[payloadData] = checked;
+      const res = await axios.post(
+        "http://62.72.0.179:5000/api/users/updateNotificationEmailStatus/" +
+          userId,
+        data
+      );
+      if (res.data.success) {
+        setData(res.data.object[0]);
+        notification.success({
+          ...notificationConfig,
+          message: "Notification setting updated successfully",
+        });
+      } else {
+        notification.error({
+          ...notificationConfig,
+          message: "Something went wrong",
+        });
+      }
+    } catch (error) {
+      notification.error({
+        ...notificationConfig,
+        message: "Something went wrong",
+      });
+    }
+  };
+
   const fetchData = async () => {
     try {
       const res = await axios.get(
@@ -333,7 +362,18 @@ export default function UserDetail() {
                   span={20}
                   className="mt-4"
                 >
-                  <Switch defaultChecked />
+                  <Switch
+                    onChange={(checked, event) =>
+                      changeNotificationChange(
+                        checked,
+                        event,
+                        "noti_new_matches"
+                      )
+                    }
+                    defaultChecked={
+                      data?.noti_new_matches ? data?.noti_new_matches : false
+                    }
+                  />
                 </Col>
                 <Col
                   style={{ ...styles.answerStyle }}
@@ -347,7 +387,14 @@ export default function UserDetail() {
                   span={20}
                   className="mt-4"
                 >
-                  <Switch defaultChecked />
+                  <Switch
+                    onChange={(checked, event) =>
+                      changeNotificationChange(checked, event, "noti_new_msg")
+                    }
+                    defaultChecked={
+                      data?.noti_new_msg ? data?.noti_new_msg : false
+                    }
+                  />
                 </Col>
                 <Col
                   style={{ ...styles.answerStyle }}
@@ -361,7 +408,20 @@ export default function UserDetail() {
                   span={20}
                   className="mt-4"
                 >
-                  <Switch defaultChecked />
+                  <Switch
+                    onChange={(checked, event) =>
+                      changeNotificationChange(
+                        checked,
+                        event,
+                        "noti_announcements"
+                      )
+                    }
+                    defaultChecked={
+                      data?.noti_announcements
+                        ? data?.noti_announcements
+                        : false
+                    }
+                  />
                 </Col>
                 <Col className="text-gray-400 text-xs" span={4}>
                   What's new in ValoDate
@@ -392,7 +452,18 @@ export default function UserDetail() {
                   span={20}
                   className="mt-4"
                 >
-                  <Switch defaultChecked />
+                  <Switch
+                    onChange={(checked, event) =>
+                      changeNotificationChange(
+                        checked,
+                        event,
+                        "email_new_matches"
+                      )
+                    }
+                    defaultChecked={
+                      data?.email_new_matches ? data?.email_new_matches : false
+                    }
+                  />
                 </Col>
                 <Col
                   style={{ ...styles.answerStyle }}
@@ -406,7 +477,14 @@ export default function UserDetail() {
                   span={20}
                   className="mt-4"
                 >
-                  <Switch defaultChecked />
+                  <Switch
+                    onChange={(checked, event) =>
+                      changeNotificationChange(checked, event, "email_new_msg")
+                    }
+                    defaultChecked={
+                      data?.email_new_msg ? data?.email_new_msg : false
+                    }
+                  />
                 </Col>
                 <Col
                   style={{ ...styles.answerStyle }}
@@ -420,7 +498,20 @@ export default function UserDetail() {
                   span={20}
                   className="mt-4"
                 >
-                  <Switch defaultChecked />
+                  <Switch
+                    onChange={(checked, event) =>
+                      changeNotificationChange(
+                        checked,
+                        event,
+                        "email_announcements"
+                      )
+                    }
+                    defaultChecked={
+                      data?.email_announcements
+                        ? data?.email_announcements
+                        : false
+                    }
+                  />
                 </Col>
                 <Col className="text-gray-400 text-xs" span={4}>
                   What's new in ValoDate

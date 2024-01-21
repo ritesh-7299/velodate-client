@@ -105,7 +105,6 @@ export default function NewEmail() {
     if (attachment) {
       values["attachment"] = attachment;
     }
-    console.log("🚀 ~ onSubmit ~ values:", values);
     try {
       const res = await axios.post(
         "http://62.72.0.179:5000/api/email/sendEmail",
