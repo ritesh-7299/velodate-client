@@ -2,6 +2,7 @@ import {
   Button,
   Col,
   Divider,
+  Empty,
   Flex,
   Modal,
   Row,
@@ -31,6 +32,7 @@ const getBase64 = (file) =>
 export default function UserDetail() {
   const { userId } = useParams();
   const [data, setData] = useState(null);
+  const [empty, setEmpty] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
@@ -105,6 +107,7 @@ export default function UserDetail() {
       );
       if (res.data.success) {
         setData(res.data.object[0]);
+
         notification.success({
           ...notificationConfig,
           message: "Notification setting updated successfully",
@@ -141,6 +144,7 @@ export default function UserDetail() {
         ...notificationConfig,
         message: "Something went wrong",
       });
+      setEmpty(true);
     } finally {
     }
   };
@@ -150,65 +154,66 @@ export default function UserDetail() {
 
   return (
     <AdminLayout header={"User details"} searchBar={false}>
-      {data ? (
-        <>
-          <Content
-            style={{
-              background: "#000",
-              overflow: "initial",
-              color: "white",
-            }}
-          >
-            <Flex
+      {!empty ? (
+        data ? (
+          <>
+            <Content
               style={{
-                marginTop: 16,
-                marginBottom: 16,
-                marginRight: 74,
-                marginLeft: 32,
+                background: "#000",
+                overflow: "initial",
+                color: "white",
               }}
-              justify="space-between"
             >
-              <Flex>
+              <Flex
+                style={{
+                  marginTop: 16,
+                  marginBottom: 16,
+                  marginRight: 74,
+                  marginLeft: 32,
+                }}
+                justify="space-between"
+              >
                 <Flex>
-                  <Link to={"/users"}>
-                    <img src={chevronUp} alt="icon" />
-                  </Link>
-                  <img
-                    className="rounded-full w-14 h-14"
-                    src={
-                      data.profile_img
-                        ? "http://62.72.0.179:5000/" + data.profile_img
-                        : defaultProfile
-                    }
-                    alt="profile"
-                  />
+                  <Flex>
+                    <Link to={"/users"}>
+                      <img src={chevronUp} alt="icon" />
+                    </Link>
+                    <img
+                      className="rounded-full w-14 h-14"
+                      src={
+                        data.profile_img
+                          ? "http://62.72.0.179:5000/" + data.profile_img
+                          : defaultProfile
+                      }
+                      alt="profile"
+                    />
+                  </Flex>
+                  <Flex vertical className="ml-4">
+                    <p
+                      style={{
+                        fontSize: "26px",
+                        fontStyle: "normal",
+                        fontWeight: 500,
+                        lineHeight: "100%",
+                        color: "#D19D00",
+                      }}
+                    >
+                      {data?.fullname ? data.fullname : "-"}
+                    </p>
+                    <p
+                      className="mt-1"
+                      style={{
+                        fontSize: "16px",
+                        fontStyle: "normal",
+                        fontWeight: 400,
+                        lineHeight: "100%",
+                      }}
+                    >
+                      {data?.address ? data.address : "-"}
+                    </p>
+                  </Flex>
                 </Flex>
-                <Flex vertical className="ml-4">
-                  <p
-                    style={{
-                      fontSize: "26px",
-                      fontStyle: "normal",
-                      fontWeight: 500,
-                      lineHeight: "100%",
-                      color: "#D19D00",
-                    }}
-                  >
-                    {data?.fullname ? data.fullname : "-"}
-                  </p>
-                  <p
-                    className="mt-1"
-                    style={{
-                      fontSize: "16px",
-                      fontStyle: "normal",
-                      fontWeight: 400,
-                      lineHeight: "100%",
-                    }}
-                  >
-                    {data?.address ? data.address : "-"}
-                  </p>
-                </Flex>
-              </Flex>
-              {/* <Flex>
+                {/* <Flex>
                 <Button
                   style={{
                     borderRadius: 20,
@@ -230,303 +235,312 @@ export default function UserDetail() {
                   Save changes
                 </Button>
               </Flex> */}
-            </Flex>
-            <div
-              style={{
-                marginLeft: 32,
-                marginTop: 12,
-              }}
-            >
-              <Row>
-                <Col style={{ ...styles.headingStyle }} span={24}>
-                  Basic Details
-                </Col>
-                <Col
-                  style={{ ...styles.headingStyle }}
-                  span={4}
-                  className="mt-4"
-                >
-                  Gender
-                </Col>
-                <Col
-                  style={{ ...styles.answerStyle }}
-                  span={20}
-                  className="mt-4"
-                >
-                  {data?.gender ? data.gender : "-"}
-                </Col>
-                <Col
-                  style={{ ...styles.headingStyle }}
-                  span={4}
-                  className="mt-4"
-                >
-                  Phone
-                </Col>
-                <Col
-                  style={{ ...styles.answerStyle }}
-                  span={20}
-                  className="mt-4"
-                >
-                  {data?.contact ? data.contact : "-"}
-                </Col>
-                <Col
-                  style={{ ...styles.headingStyle }}
-                  span={4}
-                  className="mt-4"
-                >
-                  Email
-                </Col>
-                <Col
-                  style={{ ...styles.answerStyle }}
-                  span={20}
-                  className="mt-4"
-                >
-                  {data?.email ? data.email : "-"}
-                </Col>
-                <Col
-                  style={{ ...styles.headingStyle }}
-                  span={4}
-                  className="mt-4"
-                >
-                  Like to date
-                </Col>
-                <Col
-                  style={{ ...styles.answerStyle }}
-                  span={20}
-                  className="mt-4"
-                >
-                  {data?.liketodate ? data.liketodate : "-"}
-                </Col>
-                <Col
-                  style={{ ...styles.headingStyle }}
-                  span={4}
-                  className="mt-4"
-                >
-                  Interests
-                </Col>
-                <Col
-                  style={{ ...styles.answerStyle }}
-                  span={20}
-                  className="mt-4"
-                >
-                  {data?.thingstodo ? data.thingstodo : "-"}
-                </Col>
-              </Row>
-              <div className="mt-8">
-                Images
-                <Upload
-                  className="mt-4 mb-4"
-                  listType="picture-card"
-                  fileList={fileList}
-                  onPreview={handlePreview}
-                  showUploadList={{ showRemoveIcon: false }}
-                  onChange={handleChange}
-                ></Upload>
-                <Modal
-                  open={previewOpen}
-                  title={previewTitle}
-                  footer={null}
-                  onCancel={handleCancel}
-                >
-                  <img
-                    alt="preview"
+              </Flex>
+              <div
+                style={{
+                  marginLeft: 32,
+                  marginTop: 12,
+                }}
+              >
+                <Row>
+                  <Col style={{ ...styles.headingStyle }} span={24}>
+                    Basic Details
+                  </Col>
+                  <Col
+                    style={{ ...styles.headingStyle }}
+                    span={4}
+                    className="mt-4"
+                  >
+                    Gender
+                  </Col>
+                  <Col
+                    style={{ ...styles.answerStyle }}
+                    span={20}
+                    className="mt-4"
+                  >
+                    {data?.gender ? data.gender : "-"}
+                  </Col>
+                  <Col
+                    style={{ ...styles.headingStyle }}
+                    span={4}
+                    className="mt-4"
+                  >
+                    Phone
+                  </Col>
+                  <Col
+                    style={{ ...styles.answerStyle }}
+                    span={20}
+                    className="mt-4"
+                  >
+                    {data?.contact ? data.contact : "-"}
+                  </Col>
+                  <Col
+                    style={{ ...styles.headingStyle }}
+                    span={4}
+                    className="mt-4"
+                  >
+                    Email
+                  </Col>
+                  <Col
+                    style={{ ...styles.answerStyle }}
+                    span={20}
+                    className="mt-4"
+                  >
+                    {data?.email ? data.email : "-"}
+                  </Col>
+                  <Col
+                    style={{ ...styles.headingStyle }}
+                    span={4}
+                    className="mt-4"
+                  >
+                    Like to date
+                  </Col>
+                  <Col
+                    style={{ ...styles.answerStyle }}
+                    span={20}
+                    className="mt-4"
+                  >
+                    {data?.liketodate ? data.liketodate : "-"}
+                  </Col>
+                  <Col
+                    style={{ ...styles.headingStyle }}
+                    span={4}
+                    className="mt-4"
+                  >
+                    Interests
+                  </Col>
+                  <Col
+                    style={{ ...styles.answerStyle }}
+                    span={20}
+                    className="mt-4"
+                  >
+                    {data?.thingstodo ? data.thingstodo : "-"}
+                  </Col>
+                </Row>
+                <div className="mt-8">
+                  Images
+                  <Upload
+                    className="mt-4 mb-4"
+                    listType="picture-card"
+                    fileList={fileList}
+                    onPreview={handlePreview}
+                    showUploadList={{ showRemoveIcon: false }}
+                    onChange={handleChange}
+                  ></Upload>
+                  <Modal
+                    open={previewOpen}
+                    title={previewTitle}
+                    footer={null}
+                    onCancel={handleCancel}
+                  >
+                    <img
+                      alt="preview"
+                      style={{
+                        width: "100%",
+                      }}
+                      src={previewImage}
+                    />
+                  </Modal>
+                </div>
+
+                <div className="mt-4 mb-4 mr-16">
+                  <Divider
                     style={{
-                      width: "100%",
+                      backgroundColor: "gray",
                     }}
-                    src={previewImage}
                   />
-                </Modal>
+                </div>
+
+                <Row>
+                  <Col style={{ ...styles.headingStyle }} span={24}>
+                    Phone Notifications
+                  </Col>
+                  <Col
+                    style={{ ...styles.answerStyle }}
+                    span={4}
+                    className="mt-4"
+                  >
+                    New Match
+                  </Col>
+                  <Col
+                    style={{ ...styles.answerStyle }}
+                    span={20}
+                    className="mt-4"
+                  >
+                    <Switch
+                      onChange={(checked, event) =>
+                        changeNotificationChange(
+                          checked,
+                          event,
+                          "noti_new_matches"
+                        )
+                      }
+                      defaultChecked={
+                        data?.noti_new_matches ? data?.noti_new_matches : false
+                      }
+                    />
+                  </Col>
+                  <Col
+                    style={{ ...styles.answerStyle }}
+                    span={4}
+                    className="mt-4"
+                  >
+                    New Messages
+                  </Col>
+                  <Col
+                    style={{ ...styles.answerStyle }}
+                    span={20}
+                    className="mt-4"
+                  >
+                    <Switch
+                      onChange={(checked, event) =>
+                        changeNotificationChange(checked, event, "noti_new_msg")
+                      }
+                      defaultChecked={
+                        data?.noti_new_msg ? data?.noti_new_msg : false
+                      }
+                    />
+                  </Col>
+                  <Col
+                    style={{ ...styles.answerStyle }}
+                    span={4}
+                    className="mt-4"
+                  >
+                    Announcements
+                  </Col>
+                  <Col
+                    style={{ ...styles.answerStyle }}
+                    span={20}
+                    className="mt-4"
+                  >
+                    <Switch
+                      onChange={(checked, event) =>
+                        changeNotificationChange(
+                          checked,
+                          event,
+                          "noti_announcements"
+                        )
+                      }
+                      defaultChecked={
+                        data?.noti_announcements
+                          ? data?.noti_announcements
+                          : false
+                      }
+                    />
+                  </Col>
+                  <Col className="text-gray-400 text-xs" span={4}>
+                    What's new in ValoDate
+                  </Col>
+                </Row>
+
+                <div className="mt-4 mb-4 mr-16">
+                  <Divider
+                    style={{
+                      backgroundColor: "gray",
+                    }}
+                  />
+                </div>
+
+                <Row>
+                  <Col style={{ ...styles.headingStyle }} span={24}>
+                    Email Notifications
+                  </Col>
+                  <Col
+                    style={{ ...styles.answerStyle }}
+                    span={4}
+                    className="mt-4"
+                  >
+                    New Match
+                  </Col>
+                  <Col
+                    style={{ ...styles.answerStyle }}
+                    span={20}
+                    className="mt-4"
+                  >
+                    <Switch
+                      onChange={(checked, event) =>
+                        changeNotificationChange(
+                          checked,
+                          event,
+                          "email_new_matches"
+                        )
+                      }
+                      defaultChecked={
+                        data?.email_new_matches
+                          ? data?.email_new_matches
+                          : false
+                      }
+                    />
+                  </Col>
+                  <Col
+                    style={{ ...styles.answerStyle }}
+                    span={4}
+                    className="mt-4"
+                  >
+                    New Messages
+                  </Col>
+                  <Col
+                    style={{ ...styles.answerStyle }}
+                    span={20}
+                    className="mt-4"
+                  >
+                    <Switch
+                      onChange={(checked, event) =>
+                        changeNotificationChange(
+                          checked,
+                          event,
+                          "email_new_msg"
+                        )
+                      }
+                      defaultChecked={
+                        data?.email_new_msg ? data?.email_new_msg : false
+                      }
+                    />
+                  </Col>
+                  <Col
+                    style={{ ...styles.answerStyle }}
+                    span={4}
+                    className="mt-4"
+                  >
+                    Announcements
+                  </Col>
+                  <Col
+                    style={{ ...styles.answerStyle }}
+                    span={20}
+                    className="mt-4"
+                  >
+                    <Switch
+                      onChange={(checked, event) =>
+                        changeNotificationChange(
+                          checked,
+                          event,
+                          "email_announcements"
+                        )
+                      }
+                      defaultChecked={
+                        data?.email_announcements
+                          ? data?.email_announcements
+                          : false
+                      }
+                    />
+                  </Col>
+                  <Col className="text-gray-400 text-xs" span={4}>
+                    What's new in ValoDate
+                  </Col>
+                </Row>
               </div>
-
-              <div className="mt-4 mb-4 mr-16">
-                <Divider
-                  style={{
-                    backgroundColor: "gray",
-                  }}
-                />
-              </div>
-
-              <Row>
-                <Col style={{ ...styles.headingStyle }} span={24}>
-                  Phone Notifications
-                </Col>
-                <Col
-                  style={{ ...styles.answerStyle }}
-                  span={4}
-                  className="mt-4"
-                >
-                  New Match
-                </Col>
-                <Col
-                  style={{ ...styles.answerStyle }}
-                  span={20}
-                  className="mt-4"
-                >
-                  <Switch
-                    onChange={(checked, event) =>
-                      changeNotificationChange(
-                        checked,
-                        event,
-                        "noti_new_matches"
-                      )
-                    }
-                    defaultChecked={
-                      data?.noti_new_matches ? data?.noti_new_matches : false
-                    }
-                  />
-                </Col>
-                <Col
-                  style={{ ...styles.answerStyle }}
-                  span={4}
-                  className="mt-4"
-                >
-                  New Messages
-                </Col>
-                <Col
-                  style={{ ...styles.answerStyle }}
-                  span={20}
-                  className="mt-4"
-                >
-                  <Switch
-                    onChange={(checked, event) =>
-                      changeNotificationChange(checked, event, "noti_new_msg")
-                    }
-                    defaultChecked={
-                      data?.noti_new_msg ? data?.noti_new_msg : false
-                    }
-                  />
-                </Col>
-                <Col
-                  style={{ ...styles.answerStyle }}
-                  span={4}
-                  className="mt-4"
-                >
-                  Announcements
-                </Col>
-                <Col
-                  style={{ ...styles.answerStyle }}
-                  span={20}
-                  className="mt-4"
-                >
-                  <Switch
-                    onChange={(checked, event) =>
-                      changeNotificationChange(
-                        checked,
-                        event,
-                        "noti_announcements"
-                      )
-                    }
-                    defaultChecked={
-                      data?.noti_announcements
-                        ? data?.noti_announcements
-                        : false
-                    }
-                  />
-                </Col>
-                <Col className="text-gray-400 text-xs" span={4}>
-                  What's new in ValoDate
-                </Col>
-              </Row>
-
-              <div className="mt-4 mb-4 mr-16">
-                <Divider
-                  style={{
-                    backgroundColor: "gray",
-                  }}
-                />
-              </div>
-
-              <Row>
-                <Col style={{ ...styles.headingStyle }} span={24}>
-                  Email Notifications
-                </Col>
-                <Col
-                  style={{ ...styles.answerStyle }}
-                  span={4}
-                  className="mt-4"
-                >
-                  New Match
-                </Col>
-                <Col
-                  style={{ ...styles.answerStyle }}
-                  span={20}
-                  className="mt-4"
-                >
-                  <Switch
-                    onChange={(checked, event) =>
-                      changeNotificationChange(
-                        checked,
-                        event,
-                        "email_new_matches"
-                      )
-                    }
-                    defaultChecked={
-                      data?.email_new_matches ? data?.email_new_matches : false
-                    }
-                  />
-                </Col>
-                <Col
-                  style={{ ...styles.answerStyle }}
-                  span={4}
-                  className="mt-4"
-                >
-                  New Messages
-                </Col>
-                <Col
-                  style={{ ...styles.answerStyle }}
-                  span={20}
-                  className="mt-4"
-                >
-                  <Switch
-                    onChange={(checked, event) =>
-                      changeNotificationChange(checked, event, "email_new_msg")
-                    }
-                    defaultChecked={
-                      data?.email_new_msg ? data?.email_new_msg : false
-                    }
-                  />
-                </Col>
-                <Col
-                  style={{ ...styles.answerStyle }}
-                  span={4}
-                  className="mt-4"
-                >
-                  Announcements
-                </Col>
-                <Col
-                  style={{ ...styles.answerStyle }}
-                  span={20}
-                  className="mt-4"
-                >
-                  <Switch
-                    onChange={(checked, event) =>
-                      changeNotificationChange(
-                        checked,
-                        event,
-                        "email_announcements"
-                      )
-                    }
-                    defaultChecked={
-                      data?.email_announcements
-                        ? data?.email_announcements
-                        : false
-                    }
-                  />
-                </Col>
-                <Col className="text-gray-400 text-xs" span={4}>
-                  What's new in ValoDate
-                </Col>
-              </Row>
-            </div>
-          </Content>
-          <Footer
-            style={{
-              background: "#000",
-            }}
-          ></Footer>
-        </>
+            </Content>
+            <Footer
+              style={{
+                background: "#000",
+              }}
+            ></Footer>
+          </>
+        ) : (
+          <Loader />
+        )
       ) : (
-        <Loader />
+        <Empty />
       )}
     </AdminLayout>
   );

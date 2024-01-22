@@ -36,13 +36,18 @@ export default function ResetPassword() {
     try {
       setLoader(true);
       values["resettoken"] = resetToken;
+      values["isAdmin"] = true;
 
       const res = await axios.post(
         "http://62.72.0.179:5000/auth/reset-password",
         values
       );
       if (res.data.success) {
-        isPasswordSet(true);
+        setIsPasswordSet(true);
+        notification.success({
+          ...notificationConfig,
+          message: "Your password has been reset successfully",
+        });
       } else {
         notification.error({
           ...notificationConfig,

@@ -1,4 +1,4 @@
-import { Button, Col, Flex, Modal, Row, notification } from "antd";
+import { Button, Col, Empty, Flex, Modal, Row, notification } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -14,6 +14,7 @@ export default function EmailDetail() {
   const [data, setData] = useState(null);
   const [loader, setLoader] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [empty, setEmpty] = useState(false);
 
   const styles = {
     headingStyle: {
@@ -32,11 +33,13 @@ export default function EmailDetail() {
 
   const fetchData = async () => {
     try {
-      setLoader(true);
       const res = await axios.get(
         `http://62.72.0.179:5000/api/email/getEmailById/${emailId}`
       );
       if (res.data.success) {
+        if (!res.data.object.length) {
+          setEmpty(true);
+        }
         setData(res.data.object[0]);
       } else {
         notification.error({
@@ -45,12 +48,12 @@ export default function EmailDetail() {
         });
       }
     } catch (error) {
+      setEmpty(true);
       notification.error({
         ...notificationConfig,
         message: "Something went wrong",
       });
     } finally {
-      setLoader(false);
     }
   };
 
@@ -139,151 +142,155 @@ export default function EmailDetail() {
         <p>Are you sure want to delete this email?</p>
         <p className="text-xs">This action is non-revisable.</p>
       </Modal>
-      {data ? (
-        <>
-          <Content
-            style={{
-              background: "#000",
-              overflow: "initial",
-              color: "white",
-            }}
-          >
-            <Flex
+      {!empty ? (
+        data ? (
+          <>
+            <Content
               style={{
-                marginTop: 16,
-                marginBottom: 16,
-                marginRight: 74,
-                marginLeft: 32,
+                background: "#000",
+                overflow: "initial",
+                color: "white",
               }}
-              justify="space-between"
             >
+              <Flex
+                style={{
+                  marginTop: 16,
+                  marginBottom: 16,
+                  marginRight: 74,
+                  marginLeft: 32,
+                }}
+                justify="space-between"
+              >
+                <div
+                  style={{
+                    width: "70%",
+                  }}
+                  className="text-3xl  text-white"
+                >
+                  Sent Emails
+                </div>
+                <Flex>
+                  <Button
+                    style={{
+                      borderRadius: 20,
+                      color: "white",
+                      marginRight: 16,
+                      marginTop: 8,
+                    }}
+                    onClick={showDeleteModal}
+                  >
+                    Delete
+                  </Button>
+                  <Button
+                    onClick={showResendModal}
+                    style={{
+                      borderRadius: 20,
+                      color: "white",
+                      marginRight: 16,
+                      marginTop: 8,
+                    }}
+                  >
+                    Resend
+                  </Button>
+                </Flex>
+              </Flex>
               <div
                 style={{
-                  width: "70%",
+                  marginLeft: 32,
+                  marginTop: 12,
                 }}
-                className="text-3xl  text-white"
               >
-                Sent Emails
+                <Row>
+                  <Col
+                    style={{ ...styles.headingStyle }}
+                    span={4}
+                    className="mt-4"
+                  >
+                    Date
+                  </Col>
+                  <Col
+                    style={{ ...styles.answerStyle }}
+                    span={20}
+                    className="mt-4"
+                  >
+                    {data?.date ? data.date.split("T")[0] : "-"}
+                  </Col>
+                  <Col
+                    style={{ ...styles.headingStyle }}
+                    span={4}
+                    className="mt-4"
+                  >
+                    To
+                  </Col>
+                  <Col
+                    style={{ ...styles.answerStyle }}
+                    span={20}
+                    className="mt-4"
+                  >
+                    {data?.target_to ? data.target_to : "-"}
+                  </Col>
+                  <Col
+                    style={{ ...styles.headingStyle }}
+                    span={4}
+                    className="mt-4"
+                  >
+                    Title
+                  </Col>
+                  <Col
+                    style={{ ...styles.answerStyle }}
+                    span={20}
+                    className="mt-4"
+                  >
+                    {data?.title ? data.title : "-"}
+                  </Col>
+                  <Col
+                    style={{ ...styles.headingStyle }}
+                    span={4}
+                    className="mt-4"
+                  >
+                    Message
+                  </Col>
+                  <Col
+                    style={{ ...styles.answerStyle }}
+                    span={20}
+                    className="mt-4"
+                  >
+                    {data?.message ? data.message : "-"}
+                  </Col>
+                  <Col
+                    style={{ ...styles.headingStyle }}
+                    span={4}
+                    className="mt-4"
+                  >
+                    File
+                  </Col>
+                  <Col
+                    style={{ ...styles.answerStyle, display: "flex" }}
+                    span={20}
+                    className="mt-4"
+                  >
+                    {data?.file ? (
+                      <>
+                        <RiAttachment2 /> {data.file}
+                      </>
+                    ) : (
+                      "-"
+                    )}
+                  </Col>
+                </Row>
               </div>
-              <Flex>
-                <Button
-                  style={{
-                    borderRadius: 20,
-                    color: "white",
-                    marginRight: 16,
-                    marginTop: 8,
-                  }}
-                  onClick={showDeleteModal}
-                >
-                  Delete
-                </Button>
-                <Button
-                  onClick={showResendModal}
-                  style={{
-                    borderRadius: 20,
-                    color: "white",
-                    marginRight: 16,
-                    marginTop: 8,
-                  }}
-                >
-                  Resend
-                </Button>
-              </Flex>
-            </Flex>
-            <div
+            </Content>
+            <Footer
               style={{
-                marginLeft: 32,
-                marginTop: 12,
+                background: "#000",
               }}
-            >
-              <Row>
-                <Col
-                  style={{ ...styles.headingStyle }}
-                  span={4}
-                  className="mt-4"
-                >
-                  Date
-                </Col>
-                <Col
-                  style={{ ...styles.answerStyle }}
-                  span={20}
-                  className="mt-4"
-                >
-                  {data?.date ? data.date.split("T")[0] : "-"}
-                </Col>
-                <Col
-                  style={{ ...styles.headingStyle }}
-                  span={4}
-                  className="mt-4"
-                >
-                  To
-                </Col>
-                <Col
-                  style={{ ...styles.answerStyle }}
-                  span={20}
-                  className="mt-4"
-                >
-                  {data?.target_to ? data.target_to : "-"}
-                </Col>
-                <Col
-                  style={{ ...styles.headingStyle }}
-                  span={4}
-                  className="mt-4"
-                >
-                  Title
-                </Col>
-                <Col
-                  style={{ ...styles.answerStyle }}
-                  span={20}
-                  className="mt-4"
-                >
-                  {data?.title ? data.title : "-"}
-                </Col>
-                <Col
-                  style={{ ...styles.headingStyle }}
-                  span={4}
-                  className="mt-4"
-                >
-                  Message
-                </Col>
-                <Col
-                  style={{ ...styles.answerStyle }}
-                  span={20}
-                  className="mt-4"
-                >
-                  {data?.message ? data.message : "-"}
-                </Col>
-                <Col
-                  style={{ ...styles.headingStyle }}
-                  span={4}
-                  className="mt-4"
-                >
-                  File
-                </Col>
-                <Col
-                  style={{ ...styles.answerStyle, display: "flex" }}
-                  span={20}
-                  className="mt-4"
-                >
-                  {data?.file ? (
-                    <>
-                      <RiAttachment2 /> {data.file}
-                    </>
-                  ) : (
-                    "-"
-                  )}
-                </Col>
-              </Row>
-            </div>
-          </Content>
-          <Footer
-            style={{
-              background: "#000",
-            }}
-          ></Footer>
-        </>
+            ></Footer>
+          </>
+        ) : (
+          <Loader />
+        )
       ) : (
-        <Loader />
+        <Empty />
       )}
     </AdminLayout>
   );

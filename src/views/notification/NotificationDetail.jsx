@@ -1,4 +1,4 @@
-import { Button, Col, Flex, Modal, Row, notification } from "antd";
+import { Button, Col, Empty, Flex, Modal, Row, notification } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -12,6 +12,7 @@ export default function NotificationDetail() {
   const { notificationId } = useParams();
   const [data, setData] = useState(null);
   const [loader, setLoader] = useState(false);
+  const [empty, setEmpty] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const styles = {
@@ -31,11 +32,13 @@ export default function NotificationDetail() {
 
   const fetchData = async () => {
     try {
-      setLoader(true);
       const res = await axios.get(
         `http://62.72.0.179:5000/api/notifications/${notificationId}`
       );
       if (res.data.success) {
+        if (!res.data.object.length) {
+          setEmpty(true);
+        }
         setData(res.data.object[0]);
       } else {
         notification.error({
@@ -44,12 +47,12 @@ export default function NotificationDetail() {
         });
       }
     } catch (error) {
+      setEmpty(true);
       notification.error({
         ...notificationConfig,
         message: "Something went wrong",
       });
     } finally {
-      setLoader(false);
     }
   };
 
@@ -139,131 +142,135 @@ export default function NotificationDetail() {
         <p>Are you sure want to delete this notification?</p>
         <p className="text-xs">This action is non-revisable.</p>
       </Modal>
-      {data ? (
-        <>
-          <Content
-            style={{
-              background: "#000",
-              overflow: "initial",
-              color: "white",
-            }}
-          >
-            <Flex
+      {!empty ? (
+        data ? (
+          <>
+            <Content
               style={{
-                marginTop: 16,
-                marginBottom: 16,
-                marginRight: 74,
-                marginLeft: 32,
+                background: "#000",
+                overflow: "initial",
+                color: "white",
               }}
-              justify="space-between"
             >
+              <Flex
+                style={{
+                  marginTop: 16,
+                  marginBottom: 16,
+                  marginRight: 74,
+                  marginLeft: 32,
+                }}
+                justify="space-between"
+              >
+                <div
+                  style={{
+                    width: "70%",
+                  }}
+                  className="text-3xl  text-white"
+                >
+                  Sent Notifications
+                </div>
+                <Flex>
+                  <Button
+                    style={{
+                      borderRadius: 20,
+                      color: "white",
+                      marginRight: 16,
+                      marginTop: 8,
+                    }}
+                    onClick={showDeleteModal}
+                  >
+                    Delete
+                  </Button>
+                  <Button
+                    style={{
+                      borderRadius: 20,
+                      color: "white",
+                      marginRight: 16,
+                      marginTop: 8,
+                    }}
+                    onClick={showResendModal}
+                  >
+                    Resend
+                  </Button>
+                </Flex>
+              </Flex>
               <div
                 style={{
-                  width: "70%",
+                  marginLeft: 32,
+                  marginTop: 12,
                 }}
-                className="text-3xl  text-white"
               >
-                Sent Notifications
+                <Row>
+                  <Col
+                    style={{ ...styles.headingStyle }}
+                    span={4}
+                    className="mt-4"
+                  >
+                    Date
+                  </Col>
+                  <Col
+                    style={{ ...styles.answerStyle }}
+                    span={20}
+                    className="mt-4"
+                  >
+                    {data?.date ? data.date : "-"}
+                  </Col>
+                  <Col
+                    style={{ ...styles.headingStyle }}
+                    span={4}
+                    className="mt-4"
+                  >
+                    To
+                  </Col>
+                  <Col
+                    style={{ ...styles.answerStyle }}
+                    span={20}
+                    className="mt-4"
+                  >
+                    {data?.target_to ? data.target_to : "-"}
+                  </Col>
+                  <Col
+                    style={{ ...styles.headingStyle }}
+                    span={4}
+                    className="mt-4"
+                  >
+                    Title
+                  </Col>
+                  <Col
+                    style={{ ...styles.answerStyle }}
+                    span={20}
+                    className="mt-4"
+                  >
+                    {data?.title ? data.title : "-"}
+                  </Col>
+                  <Col
+                    style={{ ...styles.headingStyle }}
+                    span={4}
+                    className="mt-4"
+                  >
+                    Message
+                  </Col>
+                  <Col
+                    style={{ ...styles.answerStyle }}
+                    span={20}
+                    className="mt-4"
+                  >
+                    {data?.message ? data.message : "-"}
+                  </Col>
+                </Row>
               </div>
-              <Flex>
-                <Button
-                  style={{
-                    borderRadius: 20,
-                    color: "white",
-                    marginRight: 16,
-                    marginTop: 8,
-                  }}
-                  onClick={showDeleteModal}
-                >
-                  Delete
-                </Button>
-                <Button
-                  style={{
-                    borderRadius: 20,
-                    color: "white",
-                    marginRight: 16,
-                    marginTop: 8,
-                  }}
-                  onClick={showResendModal}
-                >
-                  Resend
-                </Button>
-              </Flex>
-            </Flex>
-            <div
+            </Content>
+            <Footer
               style={{
-                marginLeft: 32,
-                marginTop: 12,
+                background: "#000",
               }}
-            >
-              <Row>
-                <Col
-                  style={{ ...styles.headingStyle }}
-                  span={4}
-                  className="mt-4"
-                >
-                  Date
-                </Col>
-                <Col
-                  style={{ ...styles.answerStyle }}
-                  span={20}
-                  className="mt-4"
-                >
-                  {data?.date ? data.date : "-"}
-                </Col>
-                <Col
-                  style={{ ...styles.headingStyle }}
-                  span={4}
-                  className="mt-4"
-                >
-                  To
-                </Col>
-                <Col
-                  style={{ ...styles.answerStyle }}
-                  span={20}
-                  className="mt-4"
-                >
-                  {data?.target_to ? data.target_to : "-"}
-                </Col>
-                <Col
-                  style={{ ...styles.headingStyle }}
-                  span={4}
-                  className="mt-4"
-                >
-                  Title
-                </Col>
-                <Col
-                  style={{ ...styles.answerStyle }}
-                  span={20}
-                  className="mt-4"
-                >
-                  {data?.title ? data.title : "-"}
-                </Col>
-                <Col
-                  style={{ ...styles.headingStyle }}
-                  span={4}
-                  className="mt-4"
-                >
-                  Message
-                </Col>
-                <Col
-                  style={{ ...styles.answerStyle }}
-                  span={20}
-                  className="mt-4"
-                >
-                  {data?.message ? data.message : "-"}
-                </Col>
-              </Row>
-            </div>
-          </Content>
-          <Footer
-            style={{
-              background: "#000",
-            }}
-          ></Footer>
-        </>
+            ></Footer>
+          </>
+        ) : (
+          <Loader />
+        )
       ) : (
-        <Loader />
+        <Empty />
       )}
     </AdminLayout>
   );

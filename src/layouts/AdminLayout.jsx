@@ -218,7 +218,7 @@ const AdminLayout = ({ children, header, searchBar = true, onSearch }) => {
                   {username ? username : ""}
                 </Popover>
               </p>
-              <IoMdNotificationsOutline
+              {/* <IoMdNotificationsOutline
                 className="user"
                 style={{
                   fontSize: "24px",
@@ -226,7 +226,7 @@ const AdminLayout = ({ children, header, searchBar = true, onSearch }) => {
                   marginTop: 2,
                   color: "white",
                 }}
-              />
+              /> */}
             </Flex>
           </Flex>
         </Header>
