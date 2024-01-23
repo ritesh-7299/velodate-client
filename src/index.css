@@ -330,9 +330,54 @@ background: var(--Brand-Gradient, linear-gradient(38deg, color(display-p3 0.8196
       font-weight: 400;
 
     }
-    .ant-table-cell .ant-btn-default{
+    .ant-table-cell .ant-btn-default {
       color: #ffffff !important;
+      width: 84px;
     }
     .text-3xl {
       font-size: 26px !important;
+    }
+    .ant-popover .ant-popover-inner {
+      background-color: #3d3b35!important;
+      box-shadow: 0px 2px 4px 0px rgba(255, 255, 255, 0.08), 0px 0px 6px 0px rgba(255, 255, 255, 0.02);
+
+box-shadow: 0px 2px 4px 0px color(display-p3 1 1 1 / 0.08), 0px 0px 6px 0px color(display-p3 1 1 1 / 0.02);
+    }
+    .ant-popover .ant-popover-arrow::before {
+      background: #3d3b35!important;
+    }
+    .ant-popover-inner-content .ant-btn{
+      height: auto !important;
+      padding: 5px 0 !important;
+      color: #ffffff !important;
+    }
+    
+    .ant-popover-inner-content .ant-divider{
+      margin: 0 !important;
+      background: #949494 !important;
+    }
+    .ant-popover-inner-content p{
+      padding: 5px 0 !important;
+      color: #ffffff !important;
+    }  .ant-popover-inner-content {
+      color: #ffffff !important;
+    }
+    .ant-popover-inner-content label span{
+      color: #ffffff !important;
+    }
+
+    .ant-table .ant-table-placeholder{
+      background: #3d3b35!important;
+    }
+    .ant-table .ant-table-placeholder .ant-empty-description{
+      color: #ffffff !important;
+    }
+    .ant-table .ant-table-placeholder .ant-table-cell:hover{
+      background-color: transparent !important;
+      border: none !important;
+    }
+
+    .h-screen .ant-input{
+      border-color:#F6F6F6!important;
+      padding: 8px 12px!important;
     }

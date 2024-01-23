@@ -151,7 +151,7 @@ export default function Signup() {
                   />
                 </div>
 
-                <div className="mb-1">
+                <div className="mb-4">
                   <Typography.Title
                     level={5}
                     style={{
@@ -183,7 +183,7 @@ export default function Signup() {
                   />
                 </div>
 
-                <div className="mb-1">
+                <div className="mb-4">
                   <Typography.Title
                     level={5}
                     style={{
@@ -215,7 +215,7 @@ export default function Signup() {
                   />
                 </div>
 
-                <div className="mb-1 ">
+                <div className="mb-4">
                   <Typography.Title
                     level={5}
                     style={{
@@ -247,7 +247,7 @@ export default function Signup() {
                   />
                 </div>
 
-                <div className="mb-1 ">
+                <div className="mb-4">
                   <Typography.Title
                     level={5}
                     style={{

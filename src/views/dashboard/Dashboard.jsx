@@ -176,7 +176,7 @@ export default function Dashboard() {
       >
         <Flex
           gap={49}
-          style={{ marginTop: 16, marginBottom: 16, marginLeft: 32 }}
+          style={{ marginTop: 16, marginBottom: 16, marginLeft: 42, marginRight: 42 }}
         >
           <div
             className="cardbox"
@@ -262,12 +262,12 @@ export default function Dashboard() {
             </Flex>
           </div>
         </Flex>
-
+        
         <Row justify={"space-evenly"} className="mt-10 mb-8 h-auto">
-          <Col style={{ backgroundColor: "#3D3B35" }} span={10}>
+          <Col style={{ backgroundColor: "#3D3B35" }} span={11}>
             <CanvasJSChart options={optionsForActiveUsers} />
           </Col>
-          <Col style={{ backgroundColor: "#3D3B35" }} span={10}>
+          <Col style={{ backgroundColor: "#3D3B35" }} span={11}>
             <CanvasJSChart options={optionsForVisitors} />
           </Col>
         </Row>
