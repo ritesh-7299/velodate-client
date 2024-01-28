@@ -107,7 +107,7 @@ export default function NewEmail() {
     }
     try {
       const res = await axios.post(
-        "https://api.velodate.com/api/email/sendEmail",
+        "https://emailapi.velodate.com/api/email/sendEmail",
         values
       );
       if (res.data.success) {
