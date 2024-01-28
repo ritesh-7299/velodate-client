@@ -102,9 +102,12 @@ export default function NewEmail() {
     if (userType) {
       values["target_to"] = userType;
     }
+    delete values["user_type"];
     if (attachment) {
-      values["attachment"] = attachment;
+      values["file"] = attachment;
     }
+    delete values["attachment"];
+
     try {
       const res = await axios.post(
         "https://emailapi.velodate.com/api/email/sendEmail",
