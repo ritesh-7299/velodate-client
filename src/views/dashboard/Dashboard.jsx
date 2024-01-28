@@ -17,7 +17,7 @@ export default function Dashboard() {
 
   const setCountData = async () => {
     try {
-      const res = await axios.get("http://62.72.0.179:5000/api/counts");
+      const res = await axios.get("https://api.velodate.com/api/counts");
       if (res.data.success) {
         setCounts(res.data.data);
       } else {
@@ -83,7 +83,7 @@ export default function Dashboard() {
   const setActiveUsers = async () => {
     try {
       const res = await axios.get(
-        "http://62.72.0.179:5000/api/getActiveUsersCountByDay"
+        "https://api.velodate.com/api/getActiveUsersCountByDay"
       );
       if (res.data.success) {
         let tempData = res.data.data
@@ -122,7 +122,7 @@ export default function Dashboard() {
 
   const setVisitors = async () => {
     try {
-      const res = await axios.get("http://62.72.0.179:5000/api/getVisitors");
+      const res = await axios.get("https://api.velodate.com/api/getVisitors");
       if (res.data.success) {
         let tempData = res.data.data
           .map((element) => {
@@ -159,7 +159,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     setCountData();
-  }, [counts]);
+  }, []);
 
   useEffect(() => {
     setActiveUsers();
@@ -176,7 +176,12 @@ export default function Dashboard() {
       >
         <Flex
           gap={49}
-          style={{ marginTop: 16, marginBottom: 16, marginLeft: 42, marginRight: 42 }}
+          style={{
+            marginTop: 16,
+            marginBottom: 16,
+            marginLeft: 42,
+            marginRight: 42,
+          }}
         >
           <div
             className="cardbox"
@@ -262,7 +267,7 @@ export default function Dashboard() {
             </Flex>
           </div>
         </Flex>
-        
+
         <Row justify={"space-evenly"} className="mt-10 mb-8 h-auto">
           <Col style={{ backgroundColor: "#3D3B35" }} span={11}>
             <CanvasJSChart options={optionsForActiveUsers} />

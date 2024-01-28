@@ -57,7 +57,7 @@ const AdminLayout = ({ children, header, searchBar = true, onSearch }) => {
     }
   };
   const setUserData = async () => {
-    const res = await axios.get("http://62.72.0.179:5000/auth/getUser");
+    const res = await axios.get("https://api.velodate.com/auth/getUser");
     if (res.data?.success) {
       dispatch(
         setUser({ name: res.data?.user?.fullname, id: res.data?.user?.id })

@@ -35,7 +35,7 @@ export default function Signin() {
     setLoader(true);
     try {
       const res = await axios.post(
-        "http://62.72.0.179:5000/auth/loginForAdmin",
+        "https://api.velodate.com/auth/loginForAdmin",
         values
       );
       if (res.data.token) {

@@ -83,7 +83,7 @@ export default function Index() {
     setLoader(true);
     try {
       const res = await axios.put(
-        "http://62.72.0.179:5000/api/updateAdmin",
+        "https://api.velodate.com/api/updateAdmin",
         values
       );
       if (res.data?.success) {
@@ -110,7 +110,7 @@ export default function Index() {
 
   const fetchData = async () => {
     try {
-      const res = await axios.get(`http://62.72.0.179:5000/auth/getUser`);
+      const res = await axios.get(`https://api.velodate.com/auth/getUser`);
       if (res.data.success) {
         setData(res.data?.user);
         setGender(res.data.user?.gender);

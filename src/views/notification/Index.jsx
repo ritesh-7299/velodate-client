@@ -42,7 +42,7 @@ export default function Index() {
     try {
       setLoader(true);
       const res = await axios.get(
-        `http://62.72.0.179:5000/api/notifications/getAll?page=${page}&pageSize=10`
+        `https://api.velodate.com/api/notifications/getAll?page=${page}&pageSize=10`
       );
       if (res.data.success) {
         setData(res.data.data);

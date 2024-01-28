@@ -101,7 +101,7 @@ export default function UserDetail() {
       let data = {};
       data[payloadData] = checked;
       const res = await axios.post(
-        "http://62.72.0.179:5000/api/users/updateNotificationEmailStatus/" +
+        "https://api.velodate.com/api/users/updateNotificationEmailStatus/" +
           userId,
         data
       );
@@ -129,7 +129,7 @@ export default function UserDetail() {
   const fetchData = async () => {
     try {
       const res = await axios.get(
-        `http://62.72.0.179:5000/api/users/${userId}`
+        `https://api.velodate.com/api/users/${userId}`
       );
       if (res.data.success) {
         setData(res.data.object);
@@ -182,7 +182,7 @@ export default function UserDetail() {
                       className="rounded-full w-14 h-14"
                       src={
                         data.profile_img
-                          ? "http://62.72.0.179:5000/" + data.profile_img
+                          ? "https://api.velodate.com/" + data.profile_img
                           : defaultProfile
                       }
                       alt="profile"

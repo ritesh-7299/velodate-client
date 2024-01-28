@@ -39,7 +39,7 @@ export default function ResetPassword() {
       values["isAdmin"] = true;
 
       const res = await axios.post(
-        "http://62.72.0.179:5000/auth/reset-password",
+        "https://api.velodate.com/auth/reset-password",
         values
       );
       if (res.data.success) {

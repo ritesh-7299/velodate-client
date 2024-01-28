@@ -50,7 +50,7 @@ export default function NewNotification() {
         values["target_to"] = userType;
       }
       const res = await axios.post(
-        "http://62.72.0.179:5000/api/notifications/send",
+        "https://api.velodate.com/api/notifications/send",
         values
       );
       if (res.data.success) {

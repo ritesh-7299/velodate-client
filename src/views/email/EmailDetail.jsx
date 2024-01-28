@@ -34,7 +34,7 @@ export default function EmailDetail() {
   const fetchData = async () => {
     try {
       const res = await axios.get(
-        `http://62.72.0.179:5000/api/email/getEmailById/${emailId}`
+        `https://api.velodate.com/api/email/getEmailById/${emailId}`
       );
       if (res.data.success) {
         if (!res.data.object.length) {
@@ -74,13 +74,13 @@ export default function EmailDetail() {
       let message = "";
       if (type == "resend") {
         res = await axios.post(
-          "http://62.72.0.179:5000/api/email/sendEmail",
+          "https://api.velodate.com/api/email/sendEmail",
           data
         );
         message = "Email has been sent successfully";
       } else {
         res = await axios.delete(
-          "http://62.72.0.179:5000/api/email/" + data.id
+          "https://api.velodate.com/api/email/" + data.id
         );
         message = "Email has been deleted successfully";
       }

@@ -43,7 +43,7 @@ export default function Index() {
     try {
       setLoader(true);
       const res = await axios.get(
-        `http://62.72.0.179:5000/api/email/getAllEmailList?page=${page}&pageSize=10`
+        `https://api.velodate.com/api/email/getAllEmailList?page=${page}&pageSize=10`
       );
       if (res.data.success) {
         setData(res.data.data);

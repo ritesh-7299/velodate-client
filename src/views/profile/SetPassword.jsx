@@ -56,7 +56,7 @@ export default function SetPassword() {
     try {
       setLoader(true);
       const res = await axios.post(
-        "http://62.72.0.179:5000/auth/reset-password-admin",
+        "https://api.velodate.com/auth/reset-password-admin",
         values
       );
       if (res.data.success) {

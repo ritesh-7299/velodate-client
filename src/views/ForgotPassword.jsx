@@ -26,7 +26,7 @@ export default function ForgotPassword() {
     try {
       setLoader(true);
       const res = await axios.post(
-        "http://62.72.0.179:5000/auth/forgot-password",
+        "https://api.velodate.com/auth/forgot-password",
         values
       );
       if (res.data.success) {

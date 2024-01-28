@@ -42,7 +42,7 @@ export default function Index() {
     try {
       setLoader(true);
       const res = await axios.get(
-        "http://62.72.0.179:5000/api/searchInReports?term=" + data
+        "https://api.velodate.com/api/searchInReports?term=" + data
       );
       if (res.data?.success) {
         setData(res.data.data);
@@ -67,7 +67,7 @@ export default function Index() {
     try {
       setLoader(true);
       const res = await axios.get(
-        `http://62.72.0.179:5000/api/getAllreports?page=${page}&pageSize=10`
+        `https://api.velodate.com/api/getAllreports?page=${page}&pageSize=10`
       );
       if (res.data.success) {
         setData(res.data.data);
@@ -97,7 +97,7 @@ export default function Index() {
       let orderType = type === "nto" ? "new_to_old_users" : "old_to_new_users";
 
       const res = await axios.get(
-        "http://62.72.0.179:5000/api/sortingInReports?order=" + orderType
+        "https://api.velodate.com/api/sortingInReports?order=" + orderType
       );
       if (res.data?.success) {
         setData(res.data.data);
@@ -121,9 +121,12 @@ export default function Index() {
   const changeStatus = async (status, id) => {
     try {
       setLoader(true);
-      const res = await axios.put("http://62.72.0.179:5000/api/reports/" + id, {
-        report_status: status,
-      });
+      const res = await axios.put(
+        "https://api.velodate.com/api/reports/" + id,
+        {
+          report_status: status,
+        }
+      );
       if (res.data?.success) {
         notification.success({
           ...notificationConfig,

@@ -57,7 +57,7 @@ export default function NewEmail() {
     formData.append("image", fileData);
     try {
       const res = await axios.post(
-        "http://62.72.0.179:5000/attachment",
+        "https://api.velodate.com/attachment",
         formData,
         {
           "Content-Type": "multipart/form-data",
@@ -107,7 +107,7 @@ export default function NewEmail() {
     }
     try {
       const res = await axios.post(
-        "http://62.72.0.179:5000/api/email/sendEmail",
+        "https://api.velodate.com/api/email/sendEmail",
         values
       );
       if (res.data.success) {

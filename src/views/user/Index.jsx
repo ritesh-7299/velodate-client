@@ -75,7 +75,7 @@ export default function Index() {
     try {
       setLoader(true);
       const res = await axios.get(
-        `http://62.72.0.179:5000/api/users?page=${page}&pageSize=10`
+        `https://api.velodate.com/api/users?page=${page}&pageSize=10`
       );
       if (res.data.success) {
         setData(res.data.data);
@@ -108,7 +108,7 @@ export default function Index() {
       setFilter({ ...filter, ...filterData });
 
       const res = await axios.post(
-        "http://62.72.0.179:5000/api/filterUsers",
+        "https://api.velodate.com/api/filterUsers",
         filterData
       );
       if (res.data?.success) {
@@ -136,7 +136,7 @@ export default function Index() {
       let orderType = type === "nto" ? "new_to_old_users" : "old_to_new_users";
 
       const res = await axios.get(
-        "http://62.72.0.179:5000/api/sortingUsers?order=" + orderType
+        "https://api.velodate.com/api/sortingUsers?order=" + orderType
       );
       if (res.data?.success) {
         setData(res.data.data);
@@ -161,7 +161,7 @@ export default function Index() {
     try {
       setLoader(true);
       const res = await axios.get(
-        "http://62.72.0.179:5000/api/search?fullname=" + data
+        "https://api.velodate.com/api/search?fullname=" + data
       );
       if (res.data?.success) {
         setData(res.data.data);

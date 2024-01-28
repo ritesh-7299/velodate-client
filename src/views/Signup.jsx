@@ -46,7 +46,7 @@ export default function Signup() {
   const onSubmit = async (values) => {
     try {
       const res = await axios.post(
-        "http://62.72.0.179:5000/auth/signup",
+        "https://api.velodate.com/auth/signup",
         values
       );
       if (res.data.success) {
@@ -320,7 +320,7 @@ export default function Signup() {
         </div>
       </div>
       <div>
-        <img src={signupImage} alt="signup.png"  className="loginimg"/>
+        <img src={signupImage} alt="signup.png" className="loginimg" />
       </div>
     </div>
   );

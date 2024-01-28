@@ -33,7 +33,7 @@ export default function NotificationDetail() {
   const fetchData = async () => {
     try {
       const res = await axios.get(
-        `http://62.72.0.179:5000/api/notifications/${notificationId}`
+        `https://api.velodate.com/api/notifications/${notificationId}`
       );
       if (res.data.success) {
         if (!res.data.object.length) {
@@ -74,13 +74,13 @@ export default function NotificationDetail() {
       if (type == "resend") {
         delete data.data;
         res = await axios.post(
-          "http://62.72.0.179:5000/api/notifications/send",
+          "https://api.velodate.com/api/notifications/send",
           { data }
         );
         message = "Notification has been sent successfully";
       } else {
         res = await axios.delete(
-          "http://62.72.0.179:5000/api/notifications/" + data.id
+          "https://api.velodate.com/api/notifications/" + data.id
         );
         message = "Notification has been deleted successfully";
       }
