@@ -139,7 +139,7 @@ export default function Signup() {
                         {...field}
                         id="fullname"
                         size="middle"
-                        style={{ width: 320, borderRadius: 5 }}
+                        style={{ width: 328, borderRadius: 4}}
                         placeholder="Enter your full name"
                       />
                     )}
@@ -171,7 +171,7 @@ export default function Signup() {
                       <Input
                         {...field}
                         size="middle"
-                        style={{ width: 320, borderRadius: 5 }}
+                        style={{ width: 328, borderRadius: 4}}
                         placeholder="Enter your email"
                       />
                     )}
@@ -203,7 +203,7 @@ export default function Signup() {
                       <Input
                         {...field}
                         size="middle"
-                        style={{ width: 320, borderRadius: 5 }}
+                        style={{ width: 328, borderRadius: 4}}
                         placeholder="Enter your contact number"
                       />
                     )}
@@ -215,7 +215,7 @@ export default function Signup() {
                   />
                 </div>
 
-                <div className="mb-4">
+                <div className="mb-4 passwordinput">
                   <Typography.Title
                     level={5}
                     style={{
@@ -235,19 +235,19 @@ export default function Signup() {
                       <Input.Password
                         {...field}
                         placeholder="Create password"
-                        style={{ width: 320, borderRadius: 5 }}
+                        style={{ width: 328, borderRadius: 4}}
                       />
                     )}
                   />
 
                   <ErrorMessage
-                    className="text-gray-300 text-xs"
+                    className="text-gray-300 text-xs password_errormsg"
                     name="password"
                     component="div"
                   />
                 </div>
 
-                <div className="mb-4">
+                <div className="mb-4 passwordinput">
                   <Typography.Title
                     level={5}
                     style={{
@@ -267,24 +267,24 @@ export default function Signup() {
                       <Input.Password
                         {...field}
                         placeholder="Confirm password"
-                        style={{ width: 320, borderRadius: 5 }}
+                        style={{ width: 328, borderRadius: 4}}
                       />
                     )}
                   />
 
                   <ErrorMessage
-                    className="text-gray-300 text-xs"
+                    className="text-gray-300 text-xs password_errormsg"
                     name="confirm_password"
                     component="div"
                   />
                 </div>
 
-                <div className="mt-10">
+                <div className="mt-10 signinbtn">
                   <button
                     style={{
-                      width: "320px",
+                      width: "328px",
                       color: "black",
-                      padding: "12px 8px",
+                      padding: "6px 8px 5px 8px",
                       background:
                         "var(--Brand-Secondary_Light, color(display-p3 0.9529 0.8941 0.7098))",
                       borderRadius: "40px",

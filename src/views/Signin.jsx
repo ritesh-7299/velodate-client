@@ -126,8 +126,8 @@ export default function Signin() {
                           id="username"
                           size="middle"
                           style={{
-                            width: 320,
-                            borderRadius: 5,
+                            width: 328,
+                            borderRadius: 4,
                           }}
                           placeholder="Enter email or contact number"
                         />
@@ -141,7 +141,7 @@ export default function Signin() {
                     />
                   </div>
 
-                  <div className="mb-1 ">
+                  <div className="mb-1 passwordinput">
                     <Typography.Title
                       level={5}
                       style={{
@@ -150,6 +150,7 @@ export default function Signin() {
                         fontStyle: "normal",
                         fontWeight: 400,
                         lineHeight: "100%",
+                        
                       }}
                     >
                       Password
@@ -161,13 +162,13 @@ export default function Signin() {
                         <Input.Password
                           {...field}
                           placeholder="input password"
-                          style={{ width: 320, borderRadius: 5 }}
+                          style={{ width: 328, borderRadius: 4,  }}
                         />
                       )}
                     />
 
                     <ErrorMessage
-                      className="text-gray-300 text-xs"
+                      className="text-gray-300 text-xs password_errormsg"
                       name="password"
                       component="div"
                     />
@@ -211,13 +212,13 @@ export default function Signin() {
                     </div>
                   </div>
 
-                  <div className="mt-10">
+                  <div className="mt-10 signinbtn">
                     <button
                       disabled={!isValid || !dirty}
                       style={{
-                        width: "320px",
+                        width: "328px",
                         color: "black",
-                        padding: "12px 8px",
+                        padding: "6px 8px 5px 8px",
                         background:
                           !isValid || !dirty
                             ? "var(--Brand-Secondary_Light, color(display-p3 0.9529 0.8941 0.7098))"

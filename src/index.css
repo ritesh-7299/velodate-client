@@ -380,4 +380,49 @@ box-shadow: 0px 2px 4px 0px color(display-p3 1 1 1 / 0.08), 0px 0px 6px 0px colo
     .h-screen .ant-input{
       border-color:#F6F6F6!important;
       padding: 8px 12px!important;
+      color: #ffffff;
+    }
+
+
+    .h-screen .ant-input::placeholder {
+      color: #949494;
+      opacity: 1; /* Firefox */
+    }
+    
+     .h-screen .ant-input::-ms-input-placeholder { /* Edge 12-18 */
+      color: #949494;
+    }
+
+    .ant-checkbox-wrapper .ant-checkbox-inner{
+      background-color: #C5C5C5;
+      border-color: #C5C5C5;
+    }
+    .passwordinput .ant-input {
+      padding: 5px 0 !important;
+
+    }
+    .ant-checkbox-wrapper .ant-checkbox-checked .ant-checkbox-inner:after {
+      opacity: 0;
+      transform: rotate(45deg) scale(1) translate(-50%,-50%);
+      transition: all 0.2s cubic-bezier(0.12, 0.4, 0.29, 1.46) 0.1s;
+    }
+    .ant-checkbox-wrapper .ant-checkbox-checked .ant-checkbox-inner {
+      background-color: #FFCD00;
+      border-color: #FFCD00;
+    }
+    .signinbtn button{
+      cursor: pointer;
+    }
+    .signinbtn button:hover,.signinbtn button:focus{
+      border-color:#d19d00 !important; 
+background: linear-gradient(to bottom,  #d19d00 0%,#ffcf40 100%) !important; /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+
+    }
+    .password_errormsg{
+      width: 55%;
+    }
+
+    .d-inline {
+      display: inline;
+      padding-right: 10px;
     }

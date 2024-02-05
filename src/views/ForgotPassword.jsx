@@ -1,4 +1,5 @@
 import signupImage from "../assets/signupImage.png";
+import backimg from "../assets/back.svg";
 import logo from "../assets/logo.svg";
 import * as Yup from "yup";
 import { ErrorMessage, Field, Form, Formik } from "formik";
@@ -111,7 +112,7 @@ export default function ForgotPassword() {
                           {...field}
                           id="email"
                           size="middle"
-                          style={{ width: 320, borderRadius: 5 }}
+                          style={{ width: 328, borderRadius: 4 }}
                           placeholder="Enter your email"
                         />
                       )}
@@ -124,12 +125,12 @@ export default function ForgotPassword() {
                     />
                   </div>
 
-                  <div className="mt-10">
+                  <div className="mt-10 signinbtn">
                     <button
                       style={{
-                        width: "320px",
+                        width: "328px",
                         color: "black",
-                        padding: "12px 8px",
+                        padding: "6px 8px 5px 8px",
                         background:
                           "var(--Brand-Secondary_Light, color(display-p3 0.9529 0.8941 0.7098))",
                         borderRadius: "40px",
@@ -163,7 +164,7 @@ export default function ForgotPassword() {
 
             <p className="text-white text-xs mt-6">
               <Link to={"/signin"} className="text-white">
-                {"< Go back"}
+              <img src={backimg} alt="back.svg" className="d-inline" /> {" Go back"}
               </Link>
             </p>
           </div>
