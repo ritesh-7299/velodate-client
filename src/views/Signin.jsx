@@ -150,7 +150,6 @@ export default function Signin() {
                         fontStyle: "normal",
                         fontWeight: 400,
                         lineHeight: "100%",
-                        
                       }}
                     >
                       Password
@@ -162,7 +161,7 @@ export default function Signin() {
                         <Input.Password
                           {...field}
                           placeholder="input password"
-                          style={{ width: 328, borderRadius: 4,  }}
+                          style={{ width: 328, borderRadius: 4 }}
                         />
                       )}
                     />
@@ -237,7 +236,7 @@ export default function Signin() {
               )}
             </Formik>
 
-            <p
+            {/* <p
               style={{
                 fontSize: "14px",
                 fontStyle: "normal",
@@ -254,7 +253,7 @@ export default function Signin() {
               >
                 Sign Up
               </Link>
-            </p>
+            </p> */}
           </div>
         </div>
       </div>

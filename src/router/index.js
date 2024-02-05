@@ -39,7 +39,7 @@ export default function Index() {
           {/* restricted routes */}
           <Route Component={RestrictedMiddleware}>
             <Route path="/signin" Component={Signin} />
-            <Route path="/signup" Component={Signup} />
+            {/* <Route path="/signup" Component={Signup} /> */}
           </Route>
 
           {/* authenticated routes */}
