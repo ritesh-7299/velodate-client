@@ -42,6 +42,7 @@ export default function Dashboard() {
     },
     title: {
       text: "Active users",
+      fontColor: "white",
     },
     axisX: {
       title: "Days",
@@ -65,6 +66,7 @@ export default function Dashboard() {
     },
     title: {
       text: "Visitors",
+      fontColor: "white",
     },
     axisX: {
       title: "Days",
