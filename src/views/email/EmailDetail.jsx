@@ -74,7 +74,7 @@ export default function EmailDetail() {
       let message = "";
       if (type == "resend") {
         res = await axios.post(
-          "https://api.velodate.com/api/email/sendEmail",
+          "https://emailapi.velodate.com/api/email/sendEmail",
           data
         );
         message = "Email has been sent successfully";
