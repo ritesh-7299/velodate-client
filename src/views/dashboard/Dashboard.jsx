@@ -44,11 +44,14 @@ export default function Dashboard() {
       text: "Active users",
       fontColor: "white",
     },
+
     axisX: {
       title: "Days",
+      titleFontColor: "gray",
     },
     axisY: {
       title: "Users",
+      titleFontColor: "gray",
     },
     data: [
       {
@@ -70,9 +73,11 @@ export default function Dashboard() {
     },
     axisX: {
       title: "Days",
+      titleFontColor: "gray",
     },
     axisY: {
       title: "Users",
+      titleFontColor: "gray",
     },
     data: [
       {
