@@ -61,12 +61,17 @@ const columns = [
 
 export default function Index() {
   const [data, setData] = useState(null);
-  const [filter, setFilter] = useState(null);
+  const [filter, setFilter] = useState({
+    gender: undefined,
+    status: undefined,
+  });
   const [pagination, setPagination] = useState(null);
   const [loader, setLoader] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [showBadge, setShowBadge] = useState(false);
   const [searchData, setSearchData] = useState(null);
+  const [orderData, setOrderData] = useState(null);
+  const [paginationMode, setPaginationMode] = useState(null);
 
   const onChange = (page, pageSize) => {
     setCurrentPage(page);
@@ -101,21 +106,28 @@ export default function Index() {
     return obj ? Object.values(obj).every((value) => !value) : true;
   }
 
-  const changeFilter = async (e = null) => {
+  const changeFilter = async (e = null, page) => {
     try {
       setSearchData(null);
       setLoader(true);
-      let filterData = {};
+      let filterData = filter;
       if (e) {
+        setCurrentPage(1);
         filterData[e.target.name] = e.target.checked
           ? e.target.value
           : undefined;
-
-        setFilter({ ...filter, ...filterData });
       }
-
+      setFilter(filterData);
+      if (filter.gender || filter.status) {
+        setPaginationMode("filter");
+      } else {
+        setPaginationMode(null);
+      }
       const res = await axios.post(
-        "https://api.velodate.com/api/filterUsers",
+        "https://api.velodate.com/api/filterUsers" +
+          "?page=" +
+          page +
+          "&pageSize=10",
         filterData
       );
       if (res.data?.success) {
@@ -137,13 +149,18 @@ export default function Index() {
     }
   };
 
-  const handleSort = async (type) => {
+  const handleSort = async (type, page = 1) => {
     try {
       setLoader(true);
       let orderType = type === "nto" ? "new_to_old_users" : "old_to_new_users";
-
+      setOrderData(type);
+      setPaginationMode("sort");
       const res = await axios.get(
-        "https://api.velodate.com/api/sortingUsers?order=" + orderType
+        "https://api.velodate.com/api/sortingUsers?order=" +
+          orderType +
+          "?page=" +
+          page +
+          "&pageSize=10"
       );
       if (res.data?.success) {
         setData(res.data.data);
@@ -168,8 +185,13 @@ export default function Index() {
     try {
       if (data && data.length) {
         setSearchData(data);
+        setPaginationMode("search");
       } else {
         setSearchData(null);
+        if (paginationMode === "search") {
+          getData();
+        }
+        return;
       }
       setLoader(true);
       const res = await axios.get(
@@ -199,16 +221,30 @@ export default function Index() {
   };
 
   useEffect(() => {
-    if (searchData) {
+    if (paginationMode === "search") {
       onSearch(searchData, currentPage);
+    } else if (paginationMode === "filter") {
+      changeFilter(null, currentPage);
+    } else if (paginationMode === "sort") {
+      handleSort(orderData, currentPage);
     } else {
       getData(currentPage);
     }
   }, [currentPage]);
 
   useEffect(() => {
-    areAllValuesEmpty(filter) ? setShowBadge(false) : setShowBadge(true);
-  }, [filter]);
+    paginationMode === "filter" ? setShowBadge(true) : setShowBadge(false);
+    if (paginationMode === "filter") {
+      onSearch(null);
+      setOrderData(null);
+    } else if (paginationMode === "search") {
+      setOrderData(null);
+      setFilter({ gender: undefined, status: undefined });
+    } else if (paginationMode === "sort") {
+      setFilter({ gender: undefined, status: undefined });
+      onSearch(null);
+    }
+  }, [paginationMode]);
 
   return (
     <AdminLayout header={"Users"} onSearch={onSearch}>
@@ -249,6 +285,7 @@ export default function Index() {
                         name={"gender"}
                         value={"man"}
                         onChange={changeFilter}
+                        checked={filter.gender === "man" ? true : false}
                       >
                         Male
                       </Checkbox>
@@ -258,6 +295,7 @@ export default function Index() {
                         name={"gender"}
                         value={"women"}
                         onChange={changeFilter}
+                        checked={filter.gender === "women" ? true : false}
                       >
                         Female
                       </Checkbox>
@@ -268,6 +306,7 @@ export default function Index() {
                       <Checkbox
                         name={"status"}
                         value={true}
+                        checked={filter.status === true ? true : false}
                         onChange={changeFilter}
                       >
                         Active
@@ -277,6 +316,7 @@ export default function Index() {
                       <Checkbox
                         name={"status"}
                         value={false}
+                        checked={filter.status === false ? true : false}
                         onChange={changeFilter}
                       >
                         Inactive

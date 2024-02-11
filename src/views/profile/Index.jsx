@@ -166,7 +166,7 @@ export default function Index() {
                 >
                   <Flex>
                     <Flex>
-                      <Link to={"/users"}>
+                      <Link to={"/dashboard"}>
                         <img src={chevronUp} alt="icon" />
                       </Link>
                       <img
