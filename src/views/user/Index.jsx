@@ -237,7 +237,7 @@ export default function Index() {
                     <p>
                       <Checkbox
                         name={"gender"}
-                        value={"woman"}
+                        value={"women"}
                         onChange={changeFilter}
                       >
                         Female
