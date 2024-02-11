@@ -102,17 +102,12 @@ export default function Index() {
     }
   };
 
-  function areAllValuesEmpty(obj) {
-    return obj ? Object.values(obj).every((value) => !value) : true;
-  }
-
-  const changeFilter = async (e = null, page) => {
+  const changeFilter = async (e = null, page = 1) => {
     try {
       setSearchData(null);
       setLoader(true);
       let filterData = filter;
       if (e) {
-        setCurrentPage(1);
         filterData[e.target.name] = e.target.checked
           ? e.target.value
           : undefined;
@@ -133,6 +128,7 @@ export default function Index() {
       if (res.data?.success) {
         setData(res.data.data);
         setPagination(res.data.pagination);
+        // setCurrentPage(1);
       } else {
         notification.error({
           ...notificationConfig,
@@ -188,10 +184,7 @@ export default function Index() {
         setPaginationMode("search");
       } else {
         setSearchData(null);
-        if (paginationMode === "search") {
-          getData();
-        }
-        return;
+        setPaginationMode(null);
       }
       setLoader(true);
       const res = await axios.get(
@@ -235,14 +228,12 @@ export default function Index() {
   useEffect(() => {
     paginationMode === "filter" ? setShowBadge(true) : setShowBadge(false);
     if (paginationMode === "filter") {
-      onSearch(null);
       setOrderData(null);
     } else if (paginationMode === "search") {
       setOrderData(null);
       setFilter({ gender: undefined, status: undefined });
     } else if (paginationMode === "sort") {
       setFilter({ gender: undefined, status: undefined });
-      onSearch(null);
     }
   }, [paginationMode]);
 
