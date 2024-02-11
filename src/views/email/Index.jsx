@@ -39,6 +39,31 @@ export default function Index() {
     setCurrentPage(page);
   };
 
+  const onSearch = async (data) => {
+    try {
+      setLoader(true);
+      const res = await axios.get(
+        "https://api.velodate.com/api/searchInEmail?term=" + data
+      );
+      if (res.data?.success) {
+        setData(res.data.data);
+        setPagination(res.data.pagination);
+      } else {
+        notification.error({
+          ...notificationConfig,
+          message: "Something went wrong",
+        });
+      }
+    } catch (error) {
+      notification.error({
+        ...notificationConfig,
+        message: "Something went wrong",
+      });
+    } finally {
+      setLoader(false);
+    }
+  };
+
   const getData = async (page) => {
     try {
       setLoader(true);
@@ -68,7 +93,7 @@ export default function Index() {
   }, [currentPage]);
 
   return (
-    <AdminLayout header={"Push Email"}>
+    <AdminLayout header={"Push Email"} onSearch={onSearch}>
       {loader && <Loader />}
       <Content
         style={{

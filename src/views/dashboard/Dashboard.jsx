@@ -267,7 +267,9 @@ export default function Dashboard() {
               </div>
               <div>
                 <h3>
-                  {counts?.match_ratio ? counts?.match_ratio + "%" : "0%"}
+                  {counts?.match_ratio
+                    ? counts?.match_ratio.toFixed(2) + "%"
+                    : "0%"}
                 </h3>
                 <p>Match Ratio</p>
               </div>

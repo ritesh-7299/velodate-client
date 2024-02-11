@@ -62,12 +62,38 @@ export default function Index() {
       setLoader(false);
     }
   };
+
+  const onSearch = async (data) => {
+    try {
+      setLoader(true);
+      const res = await axios.get(
+        "https://api.velodate.com/api/searchInNotifications?term=" + data
+      );
+      if (res.data?.success) {
+        setData(res.data.data);
+        setPagination(res.data.pagination);
+      } else {
+        notification.error({
+          ...notificationConfig,
+          message: "Something went wrong",
+        });
+      }
+    } catch (error) {
+      notification.error({
+        ...notificationConfig,
+        message: "Something went wrong",
+      });
+    } finally {
+      setLoader(false);
+    }
+  };
+
   useEffect(() => {
     getData(currentPage);
   }, [currentPage]);
 
   return (
-    <AdminLayout header={"Push Notification"}>
+    <AdminLayout header={"Push Notification"} onSearch={onSearch}>
       {loader && <Loader />}
       <Content
         style={{

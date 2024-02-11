@@ -104,7 +104,8 @@ export default function Index() {
     try {
       setLoader(true);
       let filterData = {};
-      filterData[e.target.name] = e.target.checked ? e.target.value : "";
+      filterData[e.target.name] = e.target.checked ? e.target.value : undefined;
+
       setFilter({ ...filter, ...filterData });
 
       const res = await axios.post(
@@ -247,7 +248,7 @@ export default function Index() {
                     <p>
                       <Checkbox
                         name={"status"}
-                        value={"active"}
+                        value={true}
                         onChange={changeFilter}
                       >
                         Active
@@ -256,7 +257,7 @@ export default function Index() {
                     <p>
                       <Checkbox
                         name={"status"}
-                        value={"inactive"}
+                        value={false}
                         onChange={changeFilter}
                       >
                         Inactive
