@@ -33,6 +33,7 @@ export default function Index() {
   const [pagination, setPagination] = useState(null);
   const [loader, setLoader] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchData, setSearchData] = useState(null);
 
   const onChange = (page, pageSize) => {
     setCurrentPage(page);
@@ -63,11 +64,20 @@ export default function Index() {
     }
   };
 
-  const onSearch = async (data) => {
+  const onSearch = async (data, page = 1) => {
     try {
+      if (data && data.length) {
+        setSearchData(data);
+      } else {
+        setSearchData(null);
+      }
       setLoader(true);
       const res = await axios.get(
-        "https://api.velodate.com/api/searchInNotifications?term=" + data
+        "https://api.velodate.com/api/searchInNotifications?term=" +
+          data +
+          "&page=" +
+          page +
+          "&pageSize=10"
       );
       if (res.data?.success) {
         setData(res.data.data);
@@ -89,7 +99,11 @@ export default function Index() {
   };
 
   useEffect(() => {
-    getData(currentPage);
+    if (searchData) {
+      onSearch(searchData, currentPage);
+    } else {
+      getData(currentPage);
+    }
   }, [currentPage]);
 
   return (

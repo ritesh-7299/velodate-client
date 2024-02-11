@@ -66,6 +66,7 @@ export default function Index() {
   const [loader, setLoader] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [showBadge, setShowBadge] = useState(false);
+  const [searchData, setSearchData] = useState(null);
 
   const onChange = (page, pageSize) => {
     setCurrentPage(page);
@@ -100,13 +101,18 @@ export default function Index() {
     return obj ? Object.values(obj).every((value) => !value) : true;
   }
 
-  const changeFilter = async (e) => {
+  const changeFilter = async (e = null) => {
     try {
+      setSearchData(null);
       setLoader(true);
       let filterData = {};
-      filterData[e.target.name] = e.target.checked ? e.target.value : undefined;
+      if (e) {
+        filterData[e.target.name] = e.target.checked
+          ? e.target.value
+          : undefined;
 
-      setFilter({ ...filter, ...filterData });
+        setFilter({ ...filter, ...filterData });
+      }
 
       const res = await axios.post(
         "https://api.velodate.com/api/filterUsers",
@@ -158,11 +164,20 @@ export default function Index() {
     }
   };
 
-  const onSearch = async (data) => {
+  const onSearch = async (data, page = 1) => {
     try {
+      if (data && data.length) {
+        setSearchData(data);
+      } else {
+        setSearchData(null);
+      }
       setLoader(true);
       const res = await axios.get(
-        "https://api.velodate.com/api/search?fullname=" + data
+        "https://api.velodate.com/api/search?fullname=" +
+          data +
+          "&page=" +
+          page +
+          "&pageSize=10"
       );
       if (res.data?.success) {
         setData(res.data.data);
@@ -184,7 +199,11 @@ export default function Index() {
   };
 
   useEffect(() => {
-    getData(currentPage);
+    if (searchData) {
+      onSearch(searchData, currentPage);
+    } else {
+      getData(currentPage);
+    }
   }, [currentPage]);
 
   useEffect(() => {
