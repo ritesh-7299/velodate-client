@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Flex, Layout, Menu, Modal, Popover } from "antd";
+import { Flex, Layout, Menu, Modal, Popover, Tooltip } from "antd";
 import logoIcon from "../assets/icons/logoIcon.svg";
 import { Link, useNavigate } from "react-router-dom";
 import { RxDashboard } from "react-icons/rx";
@@ -25,6 +25,40 @@ const items = [
   key: String(index + 1),
   icon: React.createElement(icon),
   label: `nav ${index + 1}`,
+}));
+
+const itemsArr = [
+  {
+    icon: RxDashboard,
+    label: "nav 1",
+    tooltip: "Dashboard",
+    url: "/dashboard",
+  },
+  { icon: FiUser, label: "nav 2", tooltip: "Users", url: "/users" },
+  {
+    icon: LuFlagTriangleRight,
+    label: "nav 3",
+    tooltip: "Reports",
+    url: "/reports",
+  },
+  {
+    icon: IoMdNotificationsOutline,
+    label: "nav 4",
+    tooltip: "Notifications",
+    url: "/notifications",
+  },
+  {
+    icon: MdOutlineEmail,
+    label: "nav 5",
+    tooltip: "Emails",
+    url: "/emails",
+  },
+  { icon: IoIosLogOut, label: "nav 6", tooltip: "Logout", url: "/logout" },
+].map((item, index) => ({
+  key: String(index + 1),
+  icon: React.createElement(item.icon),
+  label: item.label,
+  tooltip: item.tooltip,
 }));
 
 const AdminLayout = ({ children, header, searchBar = true, onSearch }) => {
@@ -108,40 +142,66 @@ const AdminLayout = ({ children, header, searchBar = true, onSearch }) => {
             marginBottom: "32px",
             fontSize: "30px",
           }}
-          onClick={({ item, key, keyPath, selectedKeys, domEvent }) => {
-            switch (key) {
-              case "1":
-                navigate("/dashboard");
-                break;
+          // onClick={({ item, key, keyPath, selectedKeys, domEvent }) => {
+          //   switch (key) {
+          //     case "1":
+          //       navigate("/dashboard");
+          //       break;
 
-              case "2":
-                navigate("/users");
-                break;
+          //     case "2":
+          //       navigate("/users");
+          //       break;
 
-              case "3":
-                navigate("/reports");
-                break;
+          //     case "3":
+          //       navigate("/reports");
+          //       break;
 
-              case "4":
-                navigate("/notifications");
-                break;
+          //     case "4":
+          //       navigate("/notifications");
+          //       break;
 
-              case "5":
-                navigate("/emails");
-                break;
+          //     case "5":
+          //       navigate("/emails");
+          //       break;
 
-              case "6":
-                showLogoutModal();
-                break;
+          //     case "6":
+          //       showLogoutModal();
+          //       break;
 
-              default:
-                navigate("/notfound");
-                break;
-            }
-          }}
+          //     default:
+          //       navigate("/notfound");
+          //       break;
+          //   }
+          // }}
           mode="inline"
-          items={items}
-        />
+          // items={
+          //   <Tooltip trigger={"hover"} placement="bottom" title={"item.tooltip"}>
+          //     items
+          //   </Tooltip>
+          // }
+        >
+          {itemsArr.map((item, index) => (
+            <Tooltip
+              key={index}
+              trigger={"hover"}
+              placement="bottom"
+              title={item.tooltip}
+              onClick={() =>
+                item.label !== "nav 6"
+                  ? navigate("/" + item.tooltip.toLowerCase())
+                  : showLogoutModal()
+              }
+            >
+              <Menu.Item
+                key={index}
+                icon={item.icon}
+                style={{ boxShadow: "none" }}
+              >
+                {item.label}
+              </Menu.Item>
+            </Tooltip>
+          ))}
+        </Menu>
       </Sider>
 
       <Layout style={{ marginLeft: "72px" }}>
